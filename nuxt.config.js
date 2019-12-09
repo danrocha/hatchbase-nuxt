@@ -47,8 +47,21 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
     // Doc: https://auth.nuxtjs.org/#getting-started
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    // Doc: https://github.com/nuxt-community/apollo-module
+    '@nuxtjs/apollo',
+    // Doc: https://github.com/nuxt-community/date-fns-module
+    '@nuxtjs/date-fns'
   ],
+  apollo: {
+    tokenName: 'auth._token.auth0',
+    authenticationType: '', // left empty because token is stored including 'Bearer " from the auth module
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:4000/graphql'
+      }
+    }
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
@@ -57,10 +70,31 @@ export default {
   /*
    ** Build configuration
    */
+  auth: {
+    redirect: {
+      callback: '/callback',
+      home: false
+    },
+    strategies: {
+      auth0: {
+        domain: 'hatchbase.eu.auth0.com',
+        client_id: '6Y6eC9sCAKPZdUM4P1ZyJ33ieXAuyUJX',
+        audience: 'https://hatchbase.io/',
+        scope: ['openid', 'profile', 'email', 'https://hasura.io/jwt/claims']
+      }
+    }
+  },
+  dateFns: {
+    // locales: ['enUS'],
+    // defaultLocale: 'enUS'
+  },
   build: {
     /*
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  router: {
+    middleware: ['auth']
   }
 }
