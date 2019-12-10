@@ -1,15 +1,33 @@
 <template>
-  <div class="px-3 pt-3 pb-5 bg-white border border-white rounded shadow">
+  <div
+    @click="openCard"
+    class="px-3 pt-3 pb-5 bg-white border border-white rounded shadow"
+  >
     <div class="flex justify-between">
       <p class="font-sans text-sm font-semibold tracking-wide text-gray-700">
         {{ card.name }}
       </p>
-
-      <img
-        class="w-6 h-6 ml-3 rounded-full"
-        src="https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"
-        alt="Avatar"
-      />
+      <div class="relative z-10">
+        <button
+          v-if="isOpen"
+          @click="isOpen = false"
+          tabindex="-1"
+          class="fixed inset-0 w-full h-full cursor-default"
+        ></button>
+        <button-more-actions @click="isOpen = !isOpen" />
+        <div
+          v-if="isOpen"
+          class="absolute right-0 w-24 py-1 mt-1 text-sm bg-white border border-gray-100 rounded shadow"
+        >
+          <card-actions>
+            <template v-slot="{ deleteCard }">
+              <p class="px-2 py-1 hover:bg-yellow-500">
+                <button @click="deleteCard(card.id)">Delete</button>
+              </p>
+            </template>
+          </card-actions>
+        </div>
+      </div>
     </div>
     <div class="flex items-center justify-between mt-4">
       <span class="text-sm text-gray-600">{{ formattedDate }}</span>
@@ -18,15 +36,24 @@
   </div>
 </template>
 <script>
-import Badge from '@/components/Badge.vue'
+import Badge from '@/components/Badge'
+import ButtonMoreActions from '@/components/ButtonMoreActions'
+import CardActions from '@/components/CardActions'
 export default {
   components: {
-    Badge
+    Badge,
+    CardActions,
+    ButtonMoreActions
   },
   props: {
     card: {
       type: Object,
       default: () => ({})
+    }
+  },
+  data() {
+    return {
+      isOpen: false
     }
   },
   computed: {
@@ -51,6 +78,11 @@ export default {
         default: 'teal'
       }
       return mappings[this.card.type] || mappings.default
+    }
+  },
+  methods: {
+    openCard() {
+      console.log('open card', this.card.id)
     }
   }
 }

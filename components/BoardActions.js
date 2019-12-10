@@ -19,17 +19,20 @@ export default {
               id
               name
               description
+              order
               lists(orderBy: ORDER_ASC) {
                 totalCount
                 nodes {
                   id
                   name
+                  order
                   cards(orderBy: ORDER_ASC) {
                     totalCount
                     nodes {
                       id
                       name
                       listId
+                      order
                       createdAt
                     }
                   }

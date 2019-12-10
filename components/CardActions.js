@@ -44,13 +44,14 @@ export default {
     }
   },
   methods: {
-    async addCard(name, listId) {
-      console.log('adding card', name, listId)
+    async addCard(name, listId, order) {
+      console.log('adding card', name, listId, order)
       if (!name) return null
       const input = {
         card: {
           name,
-          listId
+          listId,
+          order
         }
       }
       try {

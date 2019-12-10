@@ -8,7 +8,7 @@
     >
       <card-actions @success-add="reset">
         <template v-slot="{ loading, addCard }">
-          <div>
+          <form @submit.prevent="addCard(name, listId, nextOrder)">
             <input
               v-model="name"
               type="text"
@@ -18,8 +18,8 @@
             />
             <div class="flex">
               <button
-                @click="addCard(name, listId)"
                 :disabled="loading"
+                type="submit"
                 class="px-4 py-1 mr-4 text-sm font-bold tracking-wide text-yellow-900 uppercase bg-yellow-500 rounded shadow hover:shadow-lg focus:outline-none focus:border focus:border-yellow-900"
               >
                 ADD
@@ -31,7 +31,7 @@
                 Cancel
               </button>
             </div>
-          </div>
+          </form>
         </template>
       </card-actions>
     </div>
@@ -61,21 +61,34 @@ export default {
     CardActions
   },
   props: {
-    listId: {
-      type: String,
+    list: {
+      type: Object,
       required: true
     }
   },
   data() {
     return {
       adding: false,
-      name: null
+      name: null,
+      listId: this.list.id
+    }
+  },
+  computed: {
+    nextOrder() {
+      return this.list.cards.totalCount
+        ? this.getNextOrder(this.list.cards.nodes)
+        : 0
     }
   },
   methods: {
     reset() {
       this.adding = false
       this.name = null
+    },
+    getNextOrder(cards) {
+      return (
+        cards.map((card) => card.order).reduce((a, b) => Math.max(a, b)) + 1
+      )
     }
   }
 }

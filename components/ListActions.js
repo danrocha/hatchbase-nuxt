@@ -7,8 +7,8 @@ export default {
       default: false
     },
     boardId: {
-      type: String,
-      required: true
+      type: Number,
+      default: null
     }
   },
   data: () => ({
@@ -22,6 +22,7 @@ export default {
             nodes {
               id
               name
+              order
             }
             totalCount
           }
@@ -44,18 +45,20 @@ export default {
     }
   },
   methods: {
-    async addBoard(name) {
+    async addList(name, boardId, order) {
       if (!name) return null
       const input = {
-        board: {
-          name
+        list: {
+          name,
+          boardId,
+          order
         }
       }
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation createBoard($input: CreateBoardInput!) {
-              createBoard(input: $input) {
+            mutation createList($input: CreateListInput!) {
+              createList(input: $input) {
                 clientMutationId
               }
             }
@@ -70,7 +73,7 @@ export default {
         console.error(e)
       }
     },
-    async deleteBoard(id) {
+    async deleteList(id) {
       if (!id) return null
       const input = {
         id
@@ -78,8 +81,8 @@ export default {
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation deleteBoard($input: DeleteBoardInput!) {
-              deleteBoard(input: $input) {
+            mutation deleteList($input: DeleteListInput!) {
+              deleteList(input: $input) {
                 clientMutationId
               }
             }
@@ -93,14 +96,39 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+    async updateList(id, patch) {
+      const input = {
+        id,
+        patch
+      }
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation updateList($input: UpdateListInput!) {
+              updateList(input: $input) {
+                clientMutationId
+              }
+            }
+          `,
+          variables: {
+            input
+          },
+          refetchQueries: ['boards']
+        })
+        this.$emit('success-update')
+      } catch (error) {
+        console.error(error)
+      }
     }
   },
   render() {
     return this.$scopedSlots.default({
       loading: this.$apollo.loading,
       data: this.data,
-      addBoard: this.addBoard,
-      deleteBoard: this.deleteBoard
+      addList: this.addList,
+      deleteList: this.deleteList,
+      updateList: this.updateList
     })
   }
 }

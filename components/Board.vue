@@ -1,19 +1,25 @@
 <template>
   <div class="flex justify-center h-full">
-    <div class="flex h-full py-12 overflow-x-scroll">
-      <div
+    <!-- <div class="flex h-full py-12 overflow-x-scroll"> -->
+    <draggable
+      v-model="board.lists.nodes"
+      :animation="200"
+      @change="moveList"
+      draggable=".list"
+      ghost-class=".ghost-list"
+      filter=".card"
+      class="flex h-full py-12 overflow-x-scroll"
+    >
+      <list-wrapper
         v-for="list in board.lists.nodes"
         :key="list.id"
-        class="px-3 py-3 mr-4 bg-gray-100 rounded rounded-lg column-width"
+        class="cursor-pointer list"
       >
-        <p class="font-sans text-sm font-semibold tracking-wide text-gray-700">
-          {{ list.name }}
-        </p>
+        <list-header :list="list" />
         <draggable
           v-model="list.cards.nodes"
           :animation="200"
-          @add="updateList(list.id)"
-          @change="move"
+          @change="change($event, list)"
           draggable=".card"
           ghost-class="ghost-card"
           group="cards"
@@ -23,13 +29,18 @@
             v-for="card in list.cards.nodes"
             :key="card.id"
             :card="card"
-            class="mt-3 cursor-move card"
+            class="mt-3 card"
           />
-          <card-footer :list-id="list.id" />
+          <card-footer :list="list" />
         </draggable>
         <!-- <cards :cards="list.cards.nodes" /> -->
-      </div>
-    </div>
+      </list-wrapper>
+
+      <list-wrapper class="self-start">
+        <lists-footer :board="board" />
+      </list-wrapper>
+    </draggable>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -39,9 +50,15 @@ import draggable from 'vuedraggable'
 // import Cards from '@/components/Cards'
 import Card from '@/components/Card'
 import CardFooter from '@/components/CardFooter'
+import ListWrapper from '@/components/ListWrapper'
+import ListsFooter from '@/components/ListsFooter'
+import ListHeader from '@/components/ListHeader'
 export default {
   name: 'Board',
   components: {
+    ListHeader,
+    ListsFooter,
+    ListWrapper,
     CardFooter,
     Card,
     // Cards,
@@ -60,23 +77,27 @@ export default {
     }
   },
   methods: {
-    async updateList(listId) {
-      const cardId = this.lastMovedCardId
-      await this.updateCard(cardId, listId)
-      console.log('Moved card:', cardId)
+    async change(evt, list) {
+      console.group('change')
+      console.log('evt', evt)
+      console.log('list', list)
+      console.groupEnd('change')
+      await this.updateListCards(list.id, list.cards.nodes)
     },
-    async updateCard(cardId, listId) {
+    async updateListCards(listId, cards) {
       const input = {
-        id: cardId,
-        patch: {
-          listId
-        }
+        listId,
+        cards
       }
       try {
         await this.$apollo.mutate({
           mutation: gql`
-            mutation updateCard($input: UpdateCardInput!) {
-              updateCard(input: $input) {
+            mutation updateListCards($input: UpdateListCardsInput!) {
+              updateListCards(input: $input) {
+                list {
+                  id
+                  name
+                }
                 clientMutationId
               }
             }
@@ -90,9 +111,36 @@ export default {
         console.error(error)
       }
     },
-    move(e) {
-      console.log('end', e)
-      this.lastMovedCardId = e.added ? e.added.element.id : e.removed.element.id
+    async moveList(e) {
+      if (e.moved) {
+        await this.updateListOrder()
+      }
+    },
+    async updateListOrder() {
+      const input = {
+        lists: this.board.lists.nodes
+      }
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation updateBoardListOrder($input: UpdateBoardListOrderInput!) {
+              updateBoardListOrder(input: $input) {
+                clientMutationId
+              }
+            }
+          `,
+          variables: {
+            input
+          }
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    defineAction(e) {
+      if (e.added) return 'added'
+      if (e.removed) return 'removed'
+      return 'moved'
     }
   }
 }
@@ -105,5 +153,8 @@ export default {
 }
 .ghost-card {
   @apply border opacity-50 border-blue-500 bg-gray-200;
+}
+.ghost-list {
+  @apply border opacity-50 border-blue-500 bg-white;
 }
 </style>
