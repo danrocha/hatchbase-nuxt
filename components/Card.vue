@@ -39,6 +39,7 @@
 import Badge from '@/components/Badge'
 import ButtonMoreActions from '@/components/ButtonMoreActions'
 import CardActions from '@/components/CardActions'
+import CardDetails from '@/components/CardDetails'
 export default {
   components: {
     Badge,
@@ -82,7 +83,11 @@ export default {
   },
   methods: {
     openCard() {
-      console.log('open card', this.card.id)
+      this.$modal.show(
+        CardDetails,
+        { card: this.card },
+        { name: 'card-details', width: '90%' }
+      )
     }
   }
 }
