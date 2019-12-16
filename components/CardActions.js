@@ -73,6 +73,33 @@ export default {
         console.error(e)
       }
     },
+    async updateCard(id, patch) {
+      const input = {
+        id,
+        patch
+      }
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation updateCard($input: UpdateCardInput!) {
+              updateCard(input: $input) {
+                card {
+                  id
+                  name
+                }
+              }
+            }
+          `,
+          variables: {
+            input
+          },
+          refetchQueries: ['card']
+        })
+        this.$emit('success-update')
+      } catch (error) {
+        console.error(error)
+      }
+    },
     async deleteCard(id) {
       if (!id) return null
       const input = {
@@ -103,7 +130,8 @@ export default {
       loading: this.$apollo.loading,
       data: this.data,
       addCard: this.addCard,
-      deleteCard: this.deleteCard
+      deleteCard: this.deleteCard,
+      updateCard: this.updateCard
     })
   }
 }

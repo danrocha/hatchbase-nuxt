@@ -12,7 +12,7 @@
             <input
               v-model="name"
               type="text"
-              placeholder="Enter a title for this card"
+              placeholder="Position name"
               class="w-full h-full mb-4 text-sm focus:outline-none"
               autofocus
             />
@@ -43,7 +43,7 @@
     >
       <div class="flex justify-center">
         <button
-          @click="adding = true"
+          @click="addNewCard"
           class="flex items-center justify-center w-12 h-12 text-lg font-bold border rounded-full hover:border-yellow-500"
         >
           +
@@ -55,6 +55,7 @@
 
 <script>
 import CardActions from '@/components/CardActions'
+import CardAddModal from '@/components/CardAddModal'
 export default {
   name: 'CardFooter',
   components: {
@@ -88,6 +89,19 @@ export default {
     getNextOrder(cards) {
       return (
         cards.map((card) => card.order).reduce((a, b) => Math.max(a, b)) + 1
+      )
+    },
+    addNewCard() {
+      this.$modal.show(
+        CardAddModal,
+        { listId: this.listId, nextOrder: this.nextOrder },
+        {
+          name: 'card-details',
+          width: '90%',
+          clickToClose: false,
+          height: 'auto',
+          scrollable: true
+        }
       )
     }
   }
