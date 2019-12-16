@@ -1,19 +1,14 @@
 <template>
   <button
     :disabled="loading"
-    class="p-2 text-sm font-bold tracking-wide text-yellow-900 uppercase bg-yellow-500 border border-yellow-600 rounded shadow"
+    class="px-2 py-1 text-sm font-bold tracking-wide text-yellow-900 uppercase bg-yellow-500 border border-yellow-600 rounded shadow disabled:opacity-50 disabled:cursor-wait"
   >
-    <half-circle-spinner v-if="loading" :animation-duration="1000" :size="20" />
-    <slot v-if="!loading" />
+    <slot />
   </button>
 </template>
 
 <script>
-import { HalfCircleSpinner } from 'epic-spinners'
 export default {
-  components: {
-    HalfCircleSpinner
-  },
   props: {
     loading: {
       type: Boolean,

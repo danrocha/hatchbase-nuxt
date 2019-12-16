@@ -1,5 +1,5 @@
 <template>
-  <div class="p-12 m-4">
+  <div ref="loadingContainer" class="p-12 m-4">
     <h2 class="mb-8 text-4xl font-bold text-center">
       Add a new job
     </h2>
@@ -18,8 +18,10 @@
           />
         </p>
         <div class="flex mb-8">
-          <base-button type="submit" class="mr-4 ">Add</base-button>
-          <button class="text-gray-600 underline" @click="$emit('close')">
+          <base-button :loading="loading" type="submit" class="mr-4"
+            >Add</base-button
+          >
+          <button @click="$emit('close')" class="text-gray-600 underline">
             Cancel
           </button>
         </div>
@@ -66,8 +68,10 @@
           </p>
         </div>
         <div class="flex mb-8">
-          <base-button type="submit" class="mr-4 ">Add</base-button>
-          <button class="text-gray-600 underline" @click="$emit('close')">
+          <base-button :loading="loading" type="submit" class="mr-4"
+            >Add</base-button
+          >
+          <button @click="$emit('close')" class="text-gray-600 underline">
             Cancel
           </button>
         </div>
@@ -104,12 +108,24 @@ export default {
       showForm: false,
       loading: false,
       details: { title: '', officeName: '', officeUrl: '' },
-      loaded: false
+      loaded: false,
+      loader: null
     }
   },
   methods: {
     async fetchJobDetails() {
       this.loading = true
+      // this.$nuxt.$loading.start()
+      this.loader = this.$loading.show({
+        container: this.$refs.loadingContainer,
+        color: '#ECC94B',
+        loader: 'spinner',
+        width: 64,
+        height: 64,
+        backgroundColor: '#ffffff',
+        opacity: 0.5,
+        zIndex: 999
+      })
       const url = this.url
       try {
         const details = await this.$axios.$get(
@@ -121,6 +137,8 @@ export default {
         console.error(error)
       } finally {
         this.loading = false
+        // this.$nuxt.$loading.finish()
+        this.loader.hide()
       }
     },
     manualAdd() {

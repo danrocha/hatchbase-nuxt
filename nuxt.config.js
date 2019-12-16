@@ -19,7 +19,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: '#ECC94B', continuous: true },
   /*
    ** Global CSS
    */
@@ -27,7 +27,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~plugins/vue-js-modal', '~plugins/v-click-outside'],
+  plugins: [
+    '~plugins/vue-js-modal',
+    '~plugins/v-click-outside',
+    '~plugins/vue-loading'
+  ],
   /*
    ** Nuxt.js dev-modules
    */
