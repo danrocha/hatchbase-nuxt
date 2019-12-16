@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center h-full">
+  <div class="flex justify-center h-screen">
     <!-- <div class="flex h-full py-12 overflow-x-scroll"> -->
     <draggable
       v-model="board.lists.nodes"
