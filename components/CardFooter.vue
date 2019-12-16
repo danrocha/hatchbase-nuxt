@@ -96,9 +96,10 @@ export default {
         CardAddModal,
         { listId: this.listId, nextOrder: this.nextOrder },
         {
-          name: 'card-details',
-          width: '90%',
-          clickToClose: false,
+          name: 'add-card',
+          adaptive: true,
+          maxWidth: 800,
+          clickToClose: true,
           height: 'auto',
           scrollable: true
         }

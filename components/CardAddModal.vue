@@ -1,95 +1,81 @@
 <template>
-  <div class="p-12">
-    <h2 class="mb-8 text-2xl font-bold text-center">
-      Add a new job to be tracked
+  <div class="p-12 m-4">
+    <h2 class="mb-8 text-4xl font-bold text-center">
+      Add a new job
     </h2>
     <!-- FETCH FROM URL -->
-    <div v-if="!loaded && !showForm">
+    <div v-if="!showForm">
       <form @submit.prevent="fetchJobDetails()" class="mb-8">
         <label class="block mb-2 text-gray-600" for="url"
           >Paste the job ad's URL so we can fetch the details for you:</label
         >
-        <p class="flex">
+        <p class="mb-2">
           <base-input
             v-model="url"
             :disabled="loading"
             class="mr-2"
             placeholder="http://..."
           />
-          <base-button :loading="loading" type="submit">
-            Add
-          </base-button>
         </p>
+        <div class="flex mb-8">
+          <base-button type="submit" class="mr-4 ">Add</base-button>
+          <button class="text-gray-600 underline" @click="$emit('close')">
+            Cancel
+          </button>
+        </div>
       </form>
       <p class="text-gray-600">
         Or
-        <button @click="manualAdd" class="text-blue-500 underline">
+        <button @click="showForm = true" class="text-blue-500 underline">
           add details manually.
         </button>
       </p>
     </div>
     <div v-else>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Application name:</label
-        >
-        <base-input v-model="details.title" placeholder="Architect at B.I.G" />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Short Description</label
-        >
-        <base-input
-          v-model="details.description"
-          placeholder="Architect at B.I.G starting in February"
-        />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Office</label
-        >
-        <base-input v-model="details.office" placeholder="B.I.G" />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Location</label
-        >
-        <base-input v-model="details.city" placeholder="Copenhagen" />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Job Title</label
-        >
-        <base-input
-          v-model="details.jobTitle"
-          placeholder="Associate Architect"
-        />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Job Type</label
-        >
-        <base-input v-model="details.jobTitle" placeholder="Full Time" />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Posted On</label
-        >
-        <base-input v-model="details.postedOn" placeholder="Nov 8th" />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Description</label
-        >
-        <editor v-model="details.descriptionHtml" />
-      </p>
-      <p>
-        <label class="block mb-2 text-gray-600" for="applicationTitle"
-          >Ad URL</label
-        >
-        <base-input v-model="details.url" placeholder="https://..." />
-      </p>
-      <button @click="showForm = false">Back</button>
+      <form>
+        <p class="mb-4">
+          <label class="block mb-2 text-gray-600" for="applicationTitle"
+            >What's the name of this application?</label
+          >
+          <base-input
+            v-model="details.title"
+            name="applicationTitle"
+            placeholder="Junior Architect at OMA"
+          />
+        </p>
+        <div class="flex flex-wrap mb-4">
+          <p class="w-1/2 pr-4">
+            <label class="block mb-2 text-gray-600" for="officeName"
+              >What's the office name?</label
+            >
+            <base-input
+              v-model="details.office"
+              name="officeName"
+              placeholder="OMA HK"
+            />
+          </p>
+          <p class="w-1/2">
+            <label class="block mb-2 text-gray-600" for="officeUrl"
+              >What's the office website?</label
+            >
+            <base-input
+              v-model="details.officeUrl"
+              name="officeUrl"
+              placeholder="https://oma.eu/"
+            />
+          </p>
+        </div>
+        <div class="flex mb-8">
+          <base-button type="submit" class="mr-4 ">Add</base-button>
+          <button class="text-gray-600 underline" @click="$emit('close')">
+            Cancel
+          </button>
+        </div>
+      </form>
+      Or
+      <button @click="showForm = false" class="text-blue-500 underline">
+        go back to automatic.
+      </button>
     </div>
   </div>
 </template>
@@ -97,10 +83,8 @@
 <script>
 import BaseInput from '@/components/BaseInput'
 import BaseButton from '@/components/BaseButton'
-import Editor from '@/components/Editor'
 export default {
   components: {
-    Editor,
     BaseButton,
     BaseInput
   },
@@ -119,7 +103,7 @@ export default {
       url: '',
       showForm: false,
       loading: false,
-      details: { title: '' },
+      details: { title: '', officeName: '', officeUrl: '' },
       loaded: false
     }
   },
