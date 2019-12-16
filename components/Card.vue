@@ -86,7 +86,7 @@ export default {
       this.$modal.show(
         CardDetails,
         { card: this.card },
-        { name: 'card-details', width: '90%' }
+        { name: 'card-details', width: '90%', clickToClose: false }
       )
     }
   }
