@@ -55,7 +55,7 @@
 
 <script>
 import CardActions from '@/components/CardActions'
-import CardAddModal from '@/components/CardAddModal'
+import ModalContainer from '@/components/ModalContainer'
 export default {
   name: 'CardFooter',
   components: {
@@ -93,10 +93,13 @@ export default {
     },
     addNewCard() {
       this.$modal.show(
-        CardAddModal,
-        { listId: this.listId, nextOrder: this.nextOrder },
+        ModalContainer,
         {
-          name: 'add-card',
+          modalComponent: 'CardAddModal',
+          modalProps: { listId: this.listId, nextOrder: this.nextOrder }
+        },
+        {
+          name: 'modal-container',
           adaptive: true,
           maxWidth: 800,
           clickToClose: true,

@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { CARD_FRAGMENT } from '@/components/CardActions'
 
 export default {
   props: {
@@ -29,11 +30,7 @@ export default {
                   cards(orderBy: ORDER_ASC) {
                     totalCount
                     nodes {
-                      id
-                      name
-                      listId
-                      order
-                      createdAt
+                      ...card
                     }
                   }
                 }
@@ -42,6 +39,7 @@ export default {
             totalCount
           }
         }
+        ${CARD_FRAGMENT}
       `,
       update(data) {
         this.data = data.boards

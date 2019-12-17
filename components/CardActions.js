@@ -1,5 +1,27 @@
 import gql from 'graphql-tag'
 
+export const CARD_FRAGMENT = gql`
+  fragment card on Card {
+    id
+    url
+    title
+    description
+    companyLogo
+    jobTitle
+    jobType
+    officeName
+    officeUrl
+    city
+    country
+    descriptionHtml
+    listId
+    order
+    postedOn
+    createdAt
+    updatedAt
+  }
+`
+
 export default {
   props: {
     query: {
@@ -20,12 +42,12 @@ export default {
         query cards($condition: ListCondition) {
           cards(condition: $condition) {
             nodes {
-              id
-              name
+              ...card
             }
             totalCount
           }
         }
+        ${CARD_FRAGMENT}
       `,
       variables() {
         return {
@@ -44,31 +66,38 @@ export default {
     }
   },
   methods: {
-    async addCard(name, listId, order) {
-      console.log('adding card', name, listId, order)
-      if (!name) return null
-      const input = {
-        card: {
-          name,
-          listId,
-          order
-        }
-      }
+    async addCard(e) {
+      console.log('adding card in cardActions...')
       try {
-        await this.$apollo.mutate({
+        const input = await this.checkInput(e)
+        const card = await this.createCard(input)
+        console.log('added card!', card)
+        this.$emit('success-add', card)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.$bus.$emit('loader-stop')
+      }
+    },
+    async createCard(input) {
+      try {
+        const { data } = await this.$apollo.mutate({
           mutation: gql`
             mutation createCard($input: CreateCardInput!) {
               createCard(input: $input) {
-                clientMutationId
+                card {
+                  ...card
+                }
               }
             }
+            ${CARD_FRAGMENT}
           `,
           variables: {
             input
           },
           refetchQueries: ['boards']
         })
-        this.$emit('success-add')
+        return data.createCard.card
       } catch (e) {
         console.error(e)
       }
@@ -84,11 +113,11 @@ export default {
             mutation updateCard($input: UpdateCardInput!) {
               updateCard(input: $input) {
                 card {
-                  id
-                  name
+                  ...card
                 }
               }
             }
+            ${CARD_FRAGMENT}
           `,
           variables: {
             input
@@ -123,15 +152,87 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+    checkInput(e) {
+      console.log(e)
+
+      if (!e.card)
+        throw new Error('Input is not correct: no card object found!')
+      if (
+        !e.card.title ||
+        !Object.prototype.hasOwnProperty.call(e.card, 'order') ||
+        !Object.prototype.hasOwnProperty.call(e.card, 'listId')
+      )
+        throw new Error(
+          'Input is not correct: card object contain wrong properties!'
+        )
+      return e
+    },
+    cleanInput(input) {
+      // separate office, location, card details
+      console.log('cleaning input...')
+
+      const {
+        url,
+        title,
+        description,
+        companyLogo,
+        jobTitle,
+        jobType,
+        officeName,
+        officeUrl,
+        city,
+        country,
+        descriptionHtml,
+        listId,
+        order
+      } = input
+      let { postedOn } = input
+      const office = { officeName, officeUrl, companyLogo }
+      const location = { city, country }
+      if (postedOn) {
+        try {
+          postedOn = new Date(postedOn)
+        } catch (error) {
+          console.error(error)
+          postedOn = ''
+        }
+      }
+      const card = {
+        title,
+        description,
+        jobTitle,
+        jobType,
+        descriptionHtml,
+        postedOn,
+        listId,
+        order,
+        url
+      }
+      console.log('...cleaned!')
+      return {
+        office,
+        location,
+        card
+      }
     }
   },
-  render() {
-    return this.$scopedSlots.default({
-      loading: this.$apollo.loading,
-      data: this.data,
-      addCard: this.addCard,
-      deleteCard: this.deleteCard,
-      updateCard: this.updateCard
+  created() {
+    this.$bus.$on('card-add', (e) => {
+      this.addCard(e)
     })
+  },
+  beforeDestroy() {
+    this.$bus.$off('card-add')
+  },
+  render() {
+    if (this.$scopedSlots.default)
+      return this.$scopedSlots.default({
+        loading: this.$apollo.loading,
+        data: this.data,
+        addCard: this.addCard,
+        deleteCard: this.deleteCard,
+        updateCard: this.updateCard
+      })
   }
 }

@@ -3,6 +3,7 @@
     <h2 class="mb-8 text-4xl font-bold text-center">
       Add a new job
     </h2>
+    <card-actions @success-add="showCardDetails" />
     <!-- FETCH FROM URL -->
     <div v-if="!showForm">
       <form @submit.prevent="fetchJobDetails()" class="mb-8">
@@ -86,11 +87,13 @@
 
 <script>
 import BaseInput from '@/components/BaseInput'
+import CardActions from '@/components/CardActions'
 import BaseButton from '@/components/BaseButton'
 export default {
   components: {
     BaseButton,
-    BaseInput
+    BaseInput,
+    CardActions
   },
   props: {
     listId: {
@@ -114,35 +117,41 @@ export default {
   },
   methods: {
     async fetchJobDetails() {
+      console.log('Started fetching...')
       this.loading = true
       // this.$nuxt.$loading.start()
-      this.loader = this.$loading.show({
-        container: this.$refs.loadingContainer,
-        color: '#ECC94B',
-        loader: 'spinner',
-        width: 64,
-        height: 64,
-        backgroundColor: '#ffffff',
-        opacity: 0.5,
-        zIndex: 999
+      this.$bus.$emit('loader-start', {
+        container: this.$refs.loadingContainer
       })
       const url = this.url
       try {
         const details = await this.$axios.$get(
           `http://localhost:4000/get-job-info?url=${url}`
         )
-        this.details = details
-        this.loaded = true
+        if (!details.title)
+          throw new Error(
+            'We could not reach this URL, connection timed out! Try again...'
+          )
+        this.details = {
+          ...details,
+          listId: this.listId,
+          order: this.nextOrder
+        }
+        console.log('...done fetching!')
+        this.$bus.$emit('card-add', { card: { ...this.details } })
       } catch (error) {
+        this.$bus.$emit('loader-stop')
         console.error(error)
       } finally {
         this.loading = false
         // this.$nuxt.$loading.finish()
-        this.loader.hide()
       }
     },
-    manualAdd() {
-      this.showForm = true
+    showCardDetails(e) {
+      console.log('now changing to show card details with card info:', e)
+
+      const newCard = e
+      this.$bus.$emit('modal-card-details', newCard)
     }
   }
 }
