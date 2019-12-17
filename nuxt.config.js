@@ -30,7 +30,9 @@ export default {
   plugins: [
     '~plugins/vue-js-modal',
     '~plugins/v-click-outside',
-    '~plugins/vue-loading'
+    '~plugins/vue-loading',
+    '~plugins/bus',
+    '~plugins/global-components'
   ],
   /*
    ** Nuxt.js dev-modules
