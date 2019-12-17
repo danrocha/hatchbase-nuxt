@@ -1,7 +1,7 @@
 <template>
   <button
+    class="flex items-center justify-center w-6 h-6 bg-white border border-transparent focus:outline-none boder-white focus:border focus:border-yellow-400"
     @click="$emit('click')"
-    class="flex items-center justify-center w-6 h-6 bg-white border rounded-full focus:outline-none boder-white focus:border focus:border-yellow-400"
   >
     <more-horizontal-icon />
   </button>
