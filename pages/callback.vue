@@ -115,7 +115,7 @@ export default {
     },
     async createWelcomeCard(listId) {
       const input = {
-        card: { name: 'Welcome', listId }
+        card: { title: 'Welcome', listId }
       }
       this.progressMessages.push(`... Creating welcome card...`)
       try {
