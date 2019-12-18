@@ -23,16 +23,20 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: [
+    'element-ui/lib/theme-chalk/reset.css',
+    'element-ui/lib/theme-chalk/index.css'
+  ],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '~plugins/vue-js-modal',
-    '~plugins/v-click-outside',
-    '~plugins/vue-loading',
-    '~plugins/bus',
-    '~plugins/global-components'
+    '@/plugins/vue-js-modal',
+    '@/plugins/v-click-outside',
+    // '@/plugins/vue-loading',
+    '@/plugins/bus',
+    // '@/plugins/global-components',
+    '@/plugins/element-ui'
   ],
   /*
    ** Nuxt.js dev-modules
