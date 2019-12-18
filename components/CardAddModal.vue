@@ -6,30 +6,29 @@
     <card-actions @success-add="showCardDetails" />
     <!-- FETCH FROM URL -->
     <div v-if="!showForm">
-      <form @submit.prevent="fetchJobDetails()" class="mb-8">
+      <form class="mb-8" @submit.prevent="fetchJobDetails()">
         <label class="block mb-2 text-gray-600" for="url"
           >Paste the job ad's URL so we can fetch the details for you:</label
         >
         <p class="mb-2">
-          <base-input
+          <el-input
             v-model="url"
             :disabled="loading"
-            class="mr-2"
             placeholder="http://..."
           />
         </p>
         <div class="flex mb-8">
-          <base-button :loading="loading" type="submit" class="mr-4"
-            >Add</base-button
+          <el-button type="primary" :loading="loading" native-type="submit"
+            >Add</el-button
           >
-          <button @click="$emit('close')" class="text-gray-600 underline">
+          <button class="ml-4 text-gray-600 underline" @click="$emit('close')">
             Cancel
           </button>
         </div>
       </form>
       <p class="text-gray-600">
         Or
-        <button @click="showForm = true" class="text-blue-500 underline">
+        <button class="text-blue-500 underline" @click="showForm = true">
           add details manually.
         </button>
       </p>
@@ -72,13 +71,13 @@
           <base-button :loading="loading" type="submit" class="mr-4"
             >Add</base-button
           >
-          <button @click="$emit('close')" class="text-gray-600 underline">
+          <button class="text-gray-600 underline" @click="$emit('close')">
             Cancel
           </button>
         </div>
       </form>
       Or
-      <button @click="showForm = false" class="text-blue-500 underline">
+      <button class="text-blue-500 underline" @click="showForm = false">
         go back to automatic.
       </button>
     </div>
@@ -119,10 +118,8 @@ export default {
     async fetchJobDetails() {
       console.log('Started fetching...')
       this.loading = true
-      // this.$nuxt.$loading.start()
-      this.$bus.$emit('loader-start', {
-        container: this.$refs.loadingContainer
-      })
+      this.$nuxt.$loading.start()
+
       const url = this.url
       try {
         const details = await this.$axios.$get(
@@ -140,11 +137,10 @@ export default {
         console.log('...done fetching!')
         this.$bus.$emit('card-add', { card: { ...this.details } })
       } catch (error) {
-        this.$bus.$emit('loader-stop')
         console.error(error)
       } finally {
         this.loading = false
-        // this.$nuxt.$loading.finish()
+        this.$nuxt.$loading.finish()
       }
     },
     showCardDetails(e) {

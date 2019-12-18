@@ -1,15 +1,15 @@
 <template>
   <div class="w-full">
-    <button v-if="!editing" @click="editing = true" class="cursor-text">
+    <button v-if="!editing" class="cursor-text" @click="editing = true">
       <slot />
     </button>
     <form v-else-if="editing" @submit.prevent="save">
-      <input
-        v-click-outside="clickOutside"
+      <el-input
         v-model="editText"
+        v-click-outside="clickOutside"
         type="text"
+        size="large"
         onfocus="this.select()"
-        class="w-full p-1 mr-2 tracking-wide text-gray-700 border border-yellow-500 rounded focus:outline-none"
         autofocus
       />
       <keyboard-events @keyup="keyboardEvent" />

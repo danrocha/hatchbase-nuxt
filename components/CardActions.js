@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { MILESTONE_FRAGMENT } from '@/components/MilestoneActions'
 
 export const CARD_FRAGMENT = gql`
   fragment card on Card {
@@ -19,7 +20,14 @@ export const CARD_FRAGMENT = gql`
     postedOn
     createdAt
     updatedAt
+    milestones {
+      totalCount
+      nodes {
+        ...milestone
+      }
+    }
   }
+  ${MILESTONE_FRAGMENT}
 `
 
 export default {
@@ -66,6 +74,30 @@ export default {
     }
   },
   methods: {
+    async getCard(id) {
+      this.loading = true
+      try {
+        const { data } = await this.$apollo.query({
+          query: gql`
+            query card${id}($id: Int!) {
+              card(id: $id) {
+                ...card
+              }
+            }
+            ${CARD_FRAGMENT}
+          `,
+          variables: {
+            id
+          }
+        })
+        this.$bus.$emit('card-fetched', data.card)
+        return data.card
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
+    },
     async addCard(e) {
       console.log('adding card in cardActions...')
       try {
@@ -76,7 +108,7 @@ export default {
       } catch (error) {
         console.error(error)
       } finally {
-        this.$bus.$emit('loader-stop')
+        // this.$bus.$emit('loader-stop')
       }
     },
     async createCard(input) {
@@ -102,7 +134,7 @@ export default {
         console.error(e)
       }
     },
-    async updateCard(id, patch) {
+    async update(id, patch) {
       const input = {
         id,
         patch
@@ -122,7 +154,7 @@ export default {
           variables: {
             input
           },
-          refetchQueries: ['card']
+          refetchQueries: [`card${id}`, 'boards']
         })
         this.$emit('success-update')
       } catch (error) {
@@ -221,9 +253,13 @@ export default {
     this.$bus.$on('card-add', (e) => {
       this.addCard(e)
     })
+    this.$bus.$on('card-fetch', (e) => {
+      this.getCard(e)
+    })
   },
   beforeDestroy() {
     this.$bus.$off('card-add')
+    this.$bus.$off('card-fetch')
   },
   render() {
     if (this.$scopedSlots.default)
@@ -232,7 +268,7 @@ export default {
         data: this.data,
         addCard: this.addCard,
         deleteCard: this.deleteCard,
-        updateCard: this.updateCard
+        update: this.update
       })
   }
 }
