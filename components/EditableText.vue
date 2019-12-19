@@ -8,7 +8,6 @@
         v-model="editText"
         v-click-outside="clickOutside"
         type="text"
-        size="large"
         onfocus="this.select()"
         autofocus
       />
@@ -37,6 +36,10 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    size: {
+      type: String,
+      default: 'medium'
     }
   },
   data() {

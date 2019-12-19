@@ -12,6 +12,7 @@
         <template v-slot="{ update }">
           <editable-text
             :text="cardDetails.title"
+            size="large"
             class="text-lg font-bold text-gray-900"
             @save="update(cardDetails.id, { title: $event })"
             ><h1
