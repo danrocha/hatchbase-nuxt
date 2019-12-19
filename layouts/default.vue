@@ -1,6 +1,5 @@
 <template>
   <div class="h-full p-4">
-    <base-loader />
     <navbar class="mb-8" />
     <nuxt />
   </div>
