@@ -1,68 +1,123 @@
 <template>
-  <div id="card-pane-details">
-    <div id="job-title">
-      <p v-if="card.jobTitle" class="mr-4">
-        <span class="text-xs font-bold tracking-wide text-gray-500 uppercase"
-          >Job Title</span
-        ><br />{{ card.jobTitle }}
-      </p>
-    </div>
+  <card-actions @success-update="successUpdate">
+    <template v-slot="{ loading, update }">
+      <div id="card-pane-details">
+        <div
+          id="posted-on"
+          class="flex justify-between py-2 text-xs text-sm text-gray-600 border-t border-black"
+        >
+          <p>
+            <a
+              :href="card.url"
+              target="_blank"
+              class="underline"
+              :alt="card.url"
+              >Original URL
+            </a>
+            <i class="el-icon-link" />
+          </p>
 
-    <div id="job-type">
-      <p v-if="card.jobType">
-        <span class="text-xs font-bold tracking-wide text-gray-500 uppercase"
-          >Contract</span
-        ><br />{{ card.jobType }}
-      </p>
-    </div>
+          <editable-text
+            :text="card.postedOn"
+            :loading="loading"
+            field-type="date"
+            @save="update(card.id, { postedOn: $event })"
+          >
+            <p v-if="card.postedOn">
+              Originally posted on
+              {{ $dateFns.format(card.postedOn, 'MMMM do') }}
+              <i class="el-icon-date"></i>
+            </p>
+            <p v-else class="text-blue-500 underline">
+              Add original post date <i class="el-icon-date" />
+            </p>
+          </editable-text>
+        </div>
 
-    <!-- OFFICE -->
+        <card-detail-field
+          id="job-title"
+          field-name="Job Title"
+          :text="card.jobTitle"
+          :loading="loading"
+          @save="update(card.id, { jobTitle: $event })"
+        />
+        <card-detail-field
+          id="job-type"
+          field-name="Contract type"
+          :text="card.jobType"
+          :loading="loading"
+          @save="update(card.id, { jobType: $event })"
+        />
 
-    <div id="office-name">
-      <p v-if="card.officeName">
-        <span class="text-xs font-bold tracking-wide text-gray-500 uppercase"
-          >Office</span
-        ><br />{{ card.officeName }}
-      </p>
-    </div>
+        <card-detail-field
+          id="start-date"
+          field-type="date"
+          field-name="Starting date"
+          :text="card.startDate"
+          :loading="loading"
+          @save="update(card.id, { startDate: $event })"
+        />
+        <card-detail-field
+          id="salary"
+          field-name="Salary"
+          :text="card.salary"
+          :loading="loading"
+          @save="update(card.id, { salary: $event })"
+        />
+        <card-detail-field
+          id="notes"
+          field-name="Notes"
+          :text="card.notes"
+          :loading="loading"
+          field-type="textarea"
+          @save="update(card.id, { notes: $event })"
+        />
+        <card-detail-field
+          id="description-html"
+          field-name="Description"
+          :text="card.descriptionHtml"
+          :loading="loading"
+          field-type="editor"
+          @save="update(card.id, { descriptionHtml: $event })"
+        />
+        <!--
+        <div id="description-html">
+          <p
+            class="mb-2 text-xs font-bold tracking-wide text-gray-500 uppercase"
+          >
+            Description
+          </p>
+          <div
+            v-if="card.descriptionHtml"
+            class="p-2 border border-black rounded sm:p-4 html-description"
+            v-html="card.descriptionHtml"
+          />
 
-    <div id="office-location">
-      <p v-if="card.city">
-        <span class="text-xs font-bold tracking-wide text-gray-500 uppercase"
-          >Location</span
-        ><br />{{ card.city
-        }}<span v-if="card.country">, {{ card.country }}</span>
-      </p>
-    </div>
-
-    <!-- POSITION -->
-    <div id="posted-on">
-      <p v-if="card.postedOn">
-        <span class="text-xs font-bold tracking-wide text-gray-500 uppercase"
-          >Posted On</span
-        ><br />{{ card.postedOn }}
-      </p>
-    </div>
-
-    <div id="description-html">
-      <p class="mb-2 text-xs font-bold tracking-wide text-gray-500 uppercase">
-        Description
-      </p>
-      <div
-        v-if="card.descriptionHtml"
-        class="p-2 border border-black rounded sm:p-4 html-description"
-        v-html="card.descriptionHtml"
-      />
-    </div>
-  </div>
+        </div> -->
+      </div>
+    </template>
+  </card-actions>
 </template>
 
 <script>
+import CardActions from '@/components/CardActions'
+import CardDetailField from '@/components/CardDetailField'
+import EditableText from '@/components/EditableText'
 export default {
+  components: {
+    EditableText,
+    CardDetailField,
+    CardActions
+  },
   props: {
     card: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    successUpdate() {
+      this.$bus.$emit('card-fetch', this.card.id)
     }
   }
 }
@@ -75,11 +130,12 @@ export default {
   grid-template-columns: 1fr;
   grid-auto-rows: auto;
   grid-template-areas:
+    'posted-on'
     'job-title'
     'job-type'
-    'office-name'
-    'office-location'
-    'posted-on'
+    'start-date'
+    'salary'
+    'notes'
     'description-html';
 }
 
@@ -89,9 +145,10 @@ export default {
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: auto;
     grid-template-areas:
-      'job-title job-type'
-      'office-name office-location'
       'posted-on posted-on'
+      'job-title job-type'
+      'start-date salary'
+      'notes notes'
       'description-html description-html';
   }
 }
@@ -102,11 +159,14 @@ export default {
 #job-type {
   grid-area: job-type;
 }
-#office-name {
-  grid-area: office-name;
+#start-date {
+  grid-area: start-date;
 }
-#office-location {
-  grid-area: office-location;
+#salary {
+  grid-area: salary;
+}
+#notes {
+  grid-area: notes;
 }
 #posted-on {
   grid-area: posted-on;
