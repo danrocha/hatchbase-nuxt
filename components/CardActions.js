@@ -12,12 +12,20 @@ export const CARD_FRAGMENT = gql`
     jobType
     officeName
     officeUrl
+    officeId
+    office {
+      id
+      name
+    }
     city
     country
     descriptionHtml
     listId
     order
     postedOn
+    startDate
+    salary
+    notes
     createdAt
     updatedAt
     milestones {
@@ -259,7 +267,7 @@ export default {
   },
   beforeDestroy() {
     this.$bus.$off('card-add')
-    this.$bus.$off('card-fetch')
+    // this.$bus.$off('card-fetch')
   },
   render() {
     if (this.$scopedSlots.default)
