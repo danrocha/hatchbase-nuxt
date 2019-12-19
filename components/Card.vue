@@ -1,7 +1,7 @@
 <template>
   <card-container :card-id="card.id">
     <div @click="openCard">
-      <div class="flex items-end mb-4">
+      <div class="flex items-end mb-2">
         <office-logo
           :office-name="card.officeName"
           :company-logo="card.companyLogo"
@@ -11,11 +11,19 @@
         <p v-if="card.officeName" class="text-sm text-gray-600">
           {{ card.officeName }}
         </p>
+        <p v-else class="text-sm text-blue-500 underline">Add Office</p>
       </div>
-      <div class="flex justify-between mb-4">
-        <p class="font-sans text-sm font-semibold tracking-wide text-gray-700">
+      <div class="mb-4">
+        <h2
+          class="mb-1 font-sans text-sm font-semibold leading-tight text-gray-700"
+        >
           {{ card.title }}
+        </h2>
+        <p v-if="card.city" class="text-gray-600">
+          in {{ card.city
+          }}<span v-if="card.country">, {{ card.country }}</span>
         </p>
+        <p v-else class="text-sm text-blue-500 underline">Add location</p>
       </div>
       <div class="flex items-center justify-between mt-4">
         <span class="text-sm text-gray-600">{{ formattedDate }}</span>
