@@ -22,25 +22,29 @@
           >
         </template>
       </card-actions>
-      <h2 class="text-2xl font-light">
+      <h2 v-if="cardDetails.officeName" class="text-2xl">
         <span class="text-gray-500">at </span>{{ cardDetails.officeName }}
       </h2>
+      <h2 v-else class="text-base text-blue-500 underline">Add Office</h2>
     </header>
     <nav id="nav" class="flex md:flex-col md:justify-start md:items-center">
       <button
         class="block mt-2 mr-4 text-sm tracking-wide text-gray-600 uppercase md:mr-0 md:mb-8 md:mt-4 focus:outline-none focus:font-bold"
+        :class="{ 'font-bold': pane === 'details' }"
         @click="activatePane('details')"
       >
         Job
       </button>
       <button
         class="block mt-2 mr-4 text-sm tracking-wide text-gray-600 uppercase md:mr-0 md:mb-8 focus:outline-none focus:font-bold"
+        :class="{ 'font-bold': pane === 'office' }"
         @click="activatePane('office')"
       >
         office
       </button>
       <button
         class="block mt-2 text-sm tracking-wide text-gray-600 uppercase focus:outline-none focus:font-bold"
+        :class="{ 'font-bold': pane === 'milestones' }"
         @click="activatePane('milestones')"
       >
         milestones
