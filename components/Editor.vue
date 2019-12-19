@@ -1,60 +1,84 @@
 <template>
-  <div class="bg-white border border-gray-400 rounded editor">
+  <div
+    class="bg-white border border-gray-400 rounded editor"
+    @click="editor.focus()"
+  >
     <editor-menu-bar :editor="editor" class="border-b border-grey-400">
-      <div slot-scope="{ commands, isActive }" class="py-2 bg-white">
-        <button
-          :class="{ active: isActive.bold() }"
-          @click.prevent="commands.bold"
-          aria-label="bold"
-          class="btn-editor"
-        >
-          <bold-icon />
-        </button>
-        <button
-          :class="{ active: isActive.italic() }"
-          @click.prevent="commands.italic"
-          aria-label="italic"
-          class="btn-editor"
-        >
-          <italic-icon />
-        </button>
-        <button
-          :class="{ active: isActive.underline() }"
-          @click.prevent="commands.underline"
-          aria-label="underline"
-          class="btn-editor"
-        >
-          <underline-icon />
-        </button>
+      <div
+        slot-scope="{ commands, isActive }"
+        class="flex justify-between p-2 bg-white"
+      >
+        <div class="flex items-center">
+          <button
+            :class="{ active: isActive.bold() }"
+            aria-label="bold"
+            class="btn-editor"
+            @click.prevent="commands.bold"
+          >
+            <bold-icon size="1.5x" />
+          </button>
+          <button
+            :class="{ active: isActive.italic() }"
+            aria-label="italic"
+            class="btn-editor"
+            @click.prevent="commands.italic"
+          >
+            <italic-icon size="1.5x" />
+          </button>
+          <button
+            :class="{ active: isActive.underline() }"
+            aria-label="underline"
+            class="btn-editor"
+            @click.prevent="commands.underline"
+          >
+            <underline-icon size="1.5x" />
+          </button>
 
-        <span class="border-l"></span>
-        <button
-          :class="{ active: isActive.bullet_list() }"
-          @click.prevent="commands.bullet_list"
-          aria-label="bullet list"
-          class="btn-editor"
-        >
-          <list-icon />
-        </button>
+          <span class="border-l"></span>
+          <button
+            :class="{ active: isActive.bullet_list() }"
+            aria-label="bullet list"
+            class="btn-editor"
+            @click.prevent="commands.bullet_list"
+          >
+            <list-icon size="1.5x" />
+          </button>
 
-        <span class="border-l"></span>
-        <button
-          @click.prevent="commands.undo"
-          aria-label="undo"
-          class="btn-editor"
-        >
-          Undo
-        </button>
-        <button
-          @click.prevent="commands.redo"
-          aria-label="redo"
-          class="btn-editor"
-        >
-          Redo
-        </button>
+          <span class="border-l"></span>
+          <button
+            aria-label="undo"
+            class="font-bold btn-editor"
+            @click.prevent="commands.undo"
+          >
+            Undo
+          </button>
+          <button
+            aria-label="redo"
+            class="font-bold btn-editor"
+            @click.prevent="commands.redo"
+          >
+            Redo
+          </button>
+        </div>
+
+        <div class="flex">
+          <button
+            class="mr-4 text-sm text-gray-600 underline"
+            @click="$emit('cancel')"
+          >
+            Cancel
+          </button>
+          <el-button
+            type="primary"
+            :loading="loading"
+            size="small"
+            @click="$emit('save')"
+            >Save</el-button
+          >
+        </div>
       </div>
     </editor-menu-bar>
-    <editor-content :editor="editor" :content="value" class="m-2" />
+    <editor-content :editor="editor" :content="value" class="h-full m-2" />
   </div>
 </template>
 
@@ -89,6 +113,10 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -98,6 +126,7 @@ export default {
   },
   mounted() {
     this.editor = new Editor({
+      autofocus: true,
       extensions: [
         new BulletList(),
         new ListItem(),
@@ -117,7 +146,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .editor {
   min-height: 12em;
 }
@@ -129,5 +158,9 @@ export default {
 }
 .active {
   @apply bg-gray-400;
+}
+
+.ProseMirror:focus {
+  @apply outline-none;
 }
 </style>
