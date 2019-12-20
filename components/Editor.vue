@@ -61,7 +61,7 @@
           </button>
         </div>
 
-        <div class="flex">
+        <div class="flex" v-if="showSave">
           <button
             class="mr-4 text-sm text-gray-600 underline"
             @click="$emit('cancel')"
@@ -117,6 +117,11 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+
+    showSave: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
