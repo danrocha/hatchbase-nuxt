@@ -88,7 +88,7 @@ export default {
         console.error(error)
       }
     },
-    async delete(id) {
+    async remove(id) {
       if (!id) return null
       const input = {
         id
@@ -107,7 +107,7 @@ export default {
           },
           refetchQueries: ['boards']
         })
-        this.$emit('success-delete')
+        this.$emit('success-remove')
       } catch (e) {
         console.error(e)
       }
@@ -120,7 +120,7 @@ export default {
         loading: this.$apollo.loading,
         data: this.data,
         create: this.create,
-        delete: this.delete,
+        remove: this.remove,
         update: this.update
       })
   }
