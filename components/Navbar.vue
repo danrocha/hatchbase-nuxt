@@ -2,15 +2,15 @@
   <nav class="flex items-center justify-between">
     <div class="flex items-center">
       <logo class="w-12 h-12 mr-2 text-yellow-500 fill-current" />
-      <h1 class="text-lg font-bold">
+      <h1 class="text-lg font-bold text-black">
         hatchbase
       </h1>
     </div>
     <div>
       <div v-if="$auth.loggedIn" class="relative">
         <button
-          @click="isOpen = !isOpen"
           class="relative z-10 block w-12 h-12 overflow-hidden border-2 rounded focus:outline-none focus:border-yellow-500"
+          @click="isOpen = !isOpen"
         >
           <img
             :src="
@@ -22,9 +22,9 @@
         </button>
         <button
           v-if="isOpen"
-          @click="isOpen = false"
           tabindex="-1"
           class="fixed inset-0 w-full h-full cursor-default"
+          @click="isOpen = false"
         ></button>
         <div
           v-if="isOpen"
@@ -36,13 +36,14 @@
           </p>
         </div>
       </div>
-      <button
+      <el-button v-else type="primary" @click="login">Login</el-button>
+      <!-- <button
         v-else
-        @click="login"
         class="p-2 text-sm font-bold tracking-wide uppercase border rounded shadow"
+        @click="login"
       >
         Login
-      </button>
+      </button> -->
     </div>
   </nav>
 </template>
@@ -63,6 +64,9 @@ export default {
   beforeMount() {
     document.addEventListener('keydown', this.handleEscape)
   },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.handleEscape)
+  },
   methods: {
     login() {
       this.$auth.loginWith('auth0')
@@ -75,9 +79,6 @@ export default {
         this.isOpen = false
       }
     }
-  },
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.handleEscape)
   }
 }
 </script>
