@@ -5,14 +5,19 @@
       <milestone-actions :card-id="cardId" @success-add="addedCallback">
         <template v-slot="{ create, loading }">
           <form @submit.prevent="create(input)">
-            <el-input
+            <editor
               v-model="input.milestone.body"
+              class="w-full mb-2"
+              :show-save="false"
+            />
+            <!-- <el-input
               type="textarea"
+              v-model="input.milestone.body"
               autofocus
               :rows="6"
               class="mb-2"
               :disabled="loading"
-            ></el-input>
+            ></el-input> -->
             <el-date-picker
               v-model="input.milestone.date"
               type="datetime"
@@ -47,9 +52,11 @@
 
 <script>
 import MilestoneActions from '@/components/MilestoneActions'
+import Editor from '@/components/Editor'
 export default {
   name: 'MilestoneForm',
   components: {
+    Editor,
     MilestoneActions
   },
   props: {
