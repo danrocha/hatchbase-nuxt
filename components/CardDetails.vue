@@ -13,18 +13,16 @@
           <editable-text
             :text="cardDetails.title"
             size="large"
-            class="text-lg font-bold text-gray-900"
+            class="text-lg font-bold"
             @save="update(cardDetails.id, { title: $event })"
-            ><h1
-              class="text-2xl font-bold leading-tight text-left text-gray-900"
-            >
+            ><h1 class="text-2xl font-bold leading-tight text-left text-black">
               {{ cardDetails.title }}
             </h1></editable-text
           >
         </template>
       </card-actions>
       <h2 v-if="cardDetails.officeName" class="text-2xl">
-        <span class="text-gray-500">at </span>{{ cardDetails.officeName }}
+        <span>at </span>{{ cardDetails.officeName }}
       </h2>
       <h2 v-else class="text-base text-blue-500 underline">Add Office</h2>
     </header>

@@ -18,7 +18,7 @@ export default {
 body,
 html,
 #__nuxt {
-  @apply h-screen antialiased;
+  @apply h-screen antialiased text-black;
 }
 
 .v--modal {
