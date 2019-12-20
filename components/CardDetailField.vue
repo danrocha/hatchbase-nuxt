@@ -11,7 +11,7 @@
     >
       <div
         v-if="text && fieldType === 'editor'"
-        class="w-full p-2 border border-black rounded sm:p-4 html-description"
+        class="w-full p-2 text-left border border-black rounded sm:p-4 html-description"
         v-html="text"
       />
       <p v-else-if="text">
