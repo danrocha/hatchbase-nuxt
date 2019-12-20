@@ -3,8 +3,9 @@
     <!-- INFO BOX -->
     <preference-actions>
       <template v-slot="{ data, update, loading }">
-        <div v-if="!loading && data.milestonesShowTip" class="mb-8">
+        <div v-if="!loading">
           <el-alert
+            v-if="data.milestonesShowTip"
             title="Milestones"
             type="info"
             close-text="hide"
@@ -12,6 +13,7 @@
         applications, answers received, interviews done. Everything you want to
         record goes here in a easy to follow timeline."
             show-icon
+            class="mb-8"
             @close="update(data.id, { milestonesShowTip: false })"
           >
           </el-alert>
@@ -38,6 +40,17 @@
               :class="{ 'text-gray-500': milestone.type === 'SYSTEM' }"
               v-html="milestone.body"
             />
+            <p v-if="milestone.type === 'USER'" class="text-xs text-gray-500">
+              <milestone-actions @success-remove="refetchCard">
+                <template v-slot="{ remove }">
+                  <button class="underline" @click="remove(milestone.id)">
+                    delete
+                  </button>
+                </template>
+              </milestone-actions>
+              <!-- |
+              <button class="underline">edit</button> -->
+            </p>
           </el-timeline-item>
           <el-timeline-item
             icon="el-icon-plus"
@@ -56,8 +69,10 @@
 <script>
 import MilestoneForm from '@/components/MilestoneForm'
 import PreferenceActions from '@/components/PreferenceActions'
+import MilestoneActions from '@/components/MilestoneActions'
 export default {
   components: {
+    MilestoneActions,
     PreferenceActions,
     MilestoneForm
   },
@@ -69,6 +84,17 @@ export default {
   },
   data() {
     return {}
+  },
+  watch: {
+    card(newVal, oldVal) {
+      console.log('newVal', newVal)
+      console.log('oldVal', oldVal)
+    }
+  },
+  methods: {
+    refetchCard() {
+      this.$bus.$emit('card-fetch', this.card.id)
+    }
   }
 }
 </script>
