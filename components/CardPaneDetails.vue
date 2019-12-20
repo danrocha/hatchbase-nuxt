@@ -23,9 +23,18 @@
             field-type="date"
             @save="update(card.id, { postedOn: $event })"
           >
+            <!-- <p v-if="card.postedOn">
+              Originally posted on
+              {{ card.postedOn }}
+              <i class="el-icon-date"></i>
+            </p> -->
             <p v-if="card.postedOn">
               Originally posted on
-              {{ $dateFns.format(card.postedOn, 'MMMM do') }}
+              {{
+                $dateFns.isDate(new Date(card.postedOn))
+                  ? $dateFns.format(card.postedOn, 'MMMM do')
+                  : card.postedOn
+              }}
               <i class="el-icon-date"></i>
             </p>
             <p v-else class="text-blue-500 underline">
