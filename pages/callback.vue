@@ -57,7 +57,7 @@ export default {
     },
     async createDefaultLists(boardId) {
       this.progressMessages.push(`... creating default lists ...`)
-      const listNames = ['Backlog', 'Applied', 'Interview', 'Offer', 'Negative']
+      const listNames = ['Inbox', 'Applied', 'Interview', 'Offer', 'Negative']
       const listIds = []
       for (let i = 0; i < listNames.length; i++) {
         const name = listNames[i]
