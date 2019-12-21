@@ -24,7 +24,7 @@
       </div>
     </div>
     <div v-if="showOfficeForm" id="office-info">
-      <office-form :card="card" />
+      <office-form :card="card" @finished="finishOfficeForm" />
     </div>
   </div>
 </template>
@@ -44,6 +44,11 @@ export default {
   data() {
     return {
       showOfficeForm: false
+    }
+  },
+  methods: {
+    finishOfficeForm() {
+      this.showOfficeForm = false
     }
   }
 }
