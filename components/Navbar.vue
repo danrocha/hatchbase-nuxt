@@ -2,9 +2,7 @@
   <nav class="flex items-center justify-between">
     <div class="flex items-center">
       <logo class="w-12 h-12 mr-2 text-yellow-500 fill-current" />
-      <h1 class="text-lg font-bold text-black">
-        hatchbase
-      </h1>
+      <h1 class="text-lg font-bold text-black"></h1>
     </div>
     <div>
       <div v-if="$auth.loggedIn" class="relative flex">
@@ -62,23 +60,13 @@ export default {
       isOpen: false
     }
   },
-  beforeMount() {
-    document.addEventListener('keydown', this.handleEscape)
-  },
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.handleEscape)
-  },
+
   methods: {
     login() {
       this.$auth.loginWith('auth0')
     },
     logout() {
       this.$auth.logout()
-    },
-    handleEscape(e) {
-      if (e.key === 'Esc' || e.key === 'Escape') {
-        this.isOpen = false
-      }
     }
   }
 }
