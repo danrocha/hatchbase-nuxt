@@ -2,7 +2,7 @@
   <nav class="flex items-center justify-between">
     <div class="flex items-center">
       <logo class="w-12 h-12 mr-2 text-yellow-500 fill-current" />
-      <h1 class="text-lg font-bold text-black"></h1>
+      <h1 class="text-lg font-bold text-black">hatchbase</h1>
     </div>
     <div>
       <div v-if="$auth.loggedIn" class="relative flex">
