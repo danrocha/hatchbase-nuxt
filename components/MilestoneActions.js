@@ -51,7 +51,7 @@ export default {
           variables: {
             input
           },
-          refetchQueries: [`card${this.cardId}`]
+          refetchQueries: ['card']
         })
         this.$emit('success-add')
         return data.createMilestone.milestone
@@ -105,7 +105,7 @@ export default {
           variables: {
             input
           },
-          refetchQueries: ['boards']
+          refetchQueries: ['card', 'boards']
         })
         this.$emit('success-remove')
       } catch (e) {

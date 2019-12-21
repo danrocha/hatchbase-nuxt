@@ -40,17 +40,26 @@ export const CARD_FRAGMENT = gql`
 
 export default {
   props: {
+    queryAll: {
+      type: Boolean,
+      default: false
+    },
     query: {
       type: Boolean,
       default: false
     },
+    cardId: {
+      type: Number,
+      default: null
+    },
     listId: {
-      type: String,
+      type: Number,
       default: null
     }
   },
   data: () => ({
-    data: null
+    card: null,
+    cards: null
   }),
   apollo: {
     cards: {
@@ -77,7 +86,27 @@ export default {
         return this.data
       },
       skip() {
-        return !this.query
+        return !this.queryAll
+      }
+    },
+
+    card: {
+      query: gql`
+        query card($id: Int!) {
+          card(id: $id) {
+            ...card
+          }
+        }
+        ${CARD_FRAGMENT}
+      `,
+      variables() {
+        return {
+          id: this.cardId
+        }
+      },
+
+      skip() {
+        return !this.query && !this.cardId
       }
     }
   },
@@ -162,7 +191,7 @@ export default {
           variables: {
             input
           },
-          refetchQueries: [`card${id}`, 'boards']
+          refetchQueries: ['card', 'boards']
         })
         this.$emit('success-update')
       } catch (error) {
@@ -273,7 +302,8 @@ export default {
     if (this.$scopedSlots.default)
       return this.$scopedSlots.default({
         loading: this.$apollo.loading,
-        data: this.data,
+        card: this.card,
+        cards: this.cards,
         addCard: this.addCard,
         deleteCard: this.deleteCard,
         update: this.update

@@ -1,15 +1,15 @@
 <template>
-  <div id="card-details">
-    <office-logo
-      id="logo"
-      :office-name="cardDetails.officeName"
-      :company-logo="cardDetails.companyLogo"
-      :seed="cardDetails.id"
-      class="w-full mr-2"
-    />
-    <header id="header" class="mb-8 sm:m-0">
-      <card-actions @success-update="$bus.$emit('card-fetch', card.id)">
-        <template v-slot="{ update }">
+  <card-actions :card-id="card.id" :query="true">
+    <template v-slot="{ update, card: cardDetails, loading }">
+      <div v-if="cardDetails" id="card-details" v-loading="loading">
+        <office-logo
+          id="logo"
+          :office-name="cardDetails.officeName"
+          :company-logo="cardDetails.companyLogo"
+          :seed="cardDetails.id"
+          class="w-full mr-2"
+        />
+        <header id="header" class="mb-8 sm:m-0">
           <editable-text
             :text="cardDetails.title"
             size="large"
@@ -19,42 +19,45 @@
               {{ cardDetails.title }}
             </h1></editable-text
           >
-        </template>
-      </card-actions>
-      <h2 v-if="cardDetails.officeName" class="text-2xl">
-        <span>at </span>{{ cardDetails.officeName }}
-      </h2>
-      <h2 v-else class="text-base text-blue-500 underline">Add Office</h2>
-    </header>
-    <nav id="nav" class="flex md:flex-col md:justify-start md:items-center">
-      <button
-        class="block mt-2 mr-4 text-sm tracking-wide text-gray-600 uppercase md:mr-0 md:mb-8 md:mt-4 focus:outline-none focus:font-bold"
-        :class="{ 'font-bold': pane === 'details' }"
-        @click="activatePane('details')"
-      >
-        Job
-      </button>
-      <button
-        class="block mt-2 mr-4 text-sm tracking-wide text-gray-600 uppercase md:mr-0 md:mb-8 focus:outline-none focus:font-bold"
-        :class="{ 'font-bold': pane === 'office' }"
-        @click="activatePane('office')"
-      >
-        office
-      </button>
-      <button
-        class="block mt-2 text-sm tracking-wide text-gray-600 uppercase focus:outline-none focus:font-bold"
-        :class="{ 'font-bold': pane === 'milestones' }"
-        @click="activatePane('milestones')"
-      >
-        milestones
-      </button>
-    </nav>
-    <main id="content">
-      <card-pane-details v-if="pane === 'details'" :card="cardDetails" />
-      <card-pane-office v-if="pane === 'office'" :card="cardDetails" />
-      <card-pane-milestones v-if="pane === 'milestones'" :card="cardDetails" />
-    </main>
-  </div>
+          <h2 v-if="cardDetails.officeName" class="text-2xl">
+            <span>at </span>{{ cardDetails.officeName }}
+          </h2>
+          <h2 v-else class="text-base text-blue-500 underline">Add Office</h2>
+        </header>
+        <nav id="nav" class="flex md:flex-col md:justify-start md:items-center">
+          <button
+            class="block mt-2 mr-4 text-sm tracking-wide text-gray-600 uppercase md:mr-0 md:mb-8 md:mt-4 focus:outline-none focus:font-bold"
+            :class="{ 'font-bold': pane === 'details' }"
+            @click="activatePane('details')"
+          >
+            Job
+          </button>
+          <button
+            class="block mt-2 mr-4 text-sm tracking-wide text-gray-600 uppercase md:mr-0 md:mb-8 focus:outline-none focus:font-bold"
+            :class="{ 'font-bold': pane === 'office' }"
+            @click="activatePane('office')"
+          >
+            office
+          </button>
+          <button
+            class="block mt-2 text-sm tracking-wide text-gray-600 uppercase focus:outline-none focus:font-bold"
+            :class="{ 'font-bold': pane === 'milestones' }"
+            @click="activatePane('milestones')"
+          >
+            milestones
+          </button>
+        </nav>
+        <main id="content">
+          <card-pane-details v-if="pane === 'details'" :card="cardDetails" />
+          <card-pane-office v-if="pane === 'office'" :card="cardDetails" />
+          <card-pane-milestones
+            v-if="pane === 'milestones'"
+            :card="cardDetails"
+          />
+        </main>
+      </div>
+    </template>
+  </card-actions>
 </template>
 
 <script>
@@ -82,18 +85,8 @@ export default {
   },
   data() {
     return {
-      cardDetails: { ...this.card },
       pane: 'details'
     }
-  },
-  created() {
-    this.$bus.$emit('card-fetch', this.card.id)
-    this.$bus.$on('card-fetched', (e) => {
-      this.cardDetails = e
-    })
-  },
-  beforeDestroy() {
-    this.$bus.$off('card-fetched')
   },
   methods: {
     activatePane(pane) {
