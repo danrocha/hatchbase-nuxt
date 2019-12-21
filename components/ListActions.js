@@ -73,7 +73,7 @@ export default {
         console.error(e)
       }
     },
-    async deleteList(id) {
+    async remove(id) {
       if (!id) return null
       const input = {
         id
@@ -127,7 +127,7 @@ export default {
       loading: this.$apollo.loading,
       data: this.data,
       addList: this.addList,
-      deleteList: this.deleteList,
+      remove: this.remove,
       updateList: this.updateList
     })
   }

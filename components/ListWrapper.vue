@@ -1,5 +1,5 @@
 <template>
-  <div class="px-3 py-3 mr-4 bg-gray-100 rounded rounded-lg column-width">
+  <div class="min-h-full px-3 py-3 mr-4 bg-gray-200 column-width">
     <slot />
   </div>
 </template>
@@ -10,4 +10,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.column-width {
+  min-width: 280px;
+  width: 280px;
+}
+</style>

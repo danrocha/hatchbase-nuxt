@@ -1,14 +1,14 @@
 <template>
-  <div class="flex justify-center h-screen">
+  <div class="flex justify-center bg-gray-200">
     <!-- <div class="flex h-full py-12 overflow-x-scroll"> -->
     <draggable
       v-model="board.lists.nodes"
       :animation="200"
-      @change="moveList"
       draggable=".list"
       ghost-class=".ghost-list"
       filter=".card"
-      class="flex h-full py-12 overflow-x-scroll"
+      class="flex pb-12 overflow-x-scroll"
+      @change="moveList"
     >
       <list-wrapper
         v-for="list in board.lists.nodes"
@@ -16,13 +16,14 @@
         class="cursor-pointer list"
       >
         <list-header :list="list" />
+        <card-footer v-if="list.name === 'Inbox'" :list="list" />
         <draggable
           v-model="list.cards.nodes"
           :animation="200"
-          @change="change($event, list)"
           draggable=".card"
           ghost-class="ghost-card"
           group="cards"
+          @change="change($event, list)"
         >
           <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
           <card
@@ -31,7 +32,6 @@
             :card="card"
             class="mt-3 card"
           />
-          <card-footer :list="list" />
         </draggable>
         <!-- <cards :cards="list.cards.nodes" /> -->
       </list-wrapper>
@@ -147,10 +147,6 @@ export default {
 </script>
 
 <style scoped>
-.column-width {
-  min-width: 280px;
-  width: 280px;
-}
 .ghost-card {
   @apply border opacity-50 border-blue-500 bg-gray-200;
 }
