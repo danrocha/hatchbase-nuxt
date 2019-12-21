@@ -1,8 +1,5 @@
 export default {
   mode: 'universal',
-  /*
-   ** Headers of the page
-   */
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -16,27 +13,21 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
-  /*
-   ** Customize the progress-bar color
-   */
+  // Customize the progress-bar color
   loading: { color: '#ECC94B', continuous: true },
-  /*
-   ** Global CSS
-   */
+  // Global CSS
   css: [
-    'element-ui/lib/theme-chalk/reset.css',
-    'element-ui/lib/theme-chalk/index.css'
+    // 'element-ui/lib/theme-chalk/reset.css',
+    // 'element-ui/lib/theme-chalk/index.css'
   ],
-  /*
-   ** Plugins to load before mounting the App
-   */
+
+  // Plugins to load before mounting the App
   plugins: [
     '@/plugins/vue-js-modal',
     '@/plugins/v-click-outside',
-    // '@/plugins/vue-loading',
     '@/plugins/bus',
-    // '@/plugins/global-components',
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/google-maps'
   ],
   /*
    ** Nuxt.js dev-modules
@@ -46,6 +37,7 @@ export default {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
     '@nuxtjs/tailwindcss'
+    // Docs: https://gitlab.com/broj42/nuxt-gmaps#readme
   ],
   /*
    ** Nuxt.js modules
@@ -106,7 +98,8 @@ export default {
       if (ctx.isDev) {
         config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
       }
-    }
+    },
+    transpile: [/^vue2-google-maps($|\/)/]
   },
   router: {
     middleware: ['auth']
