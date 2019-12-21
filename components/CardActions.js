@@ -15,7 +15,18 @@ export const CARD_FRAGMENT = gql`
     officeId
     office {
       id
+      domain
+      description
+      logoUrl
       name
+      url
+    }
+    location {
+      id
+      lat
+      lng
+      formattedAddress
+      internationalPhoneNumber
     }
     city
     country
