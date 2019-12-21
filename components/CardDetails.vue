@@ -22,7 +22,7 @@
           <h2 v-if="cardDetails.officeName" class="text-2xl">
             <span>at </span>{{ cardDetails.officeName }}
           </h2>
-          <h2 v-else class="text-base text-blue-500 underline">Add Office</h2>
+          <!-- <h2 v-else class="text-base text-blue-500 underline">Add Office</h2> -->
         </header>
         <nav id="nav" class="flex md:flex-col md:justify-start md:items-center">
           <button
