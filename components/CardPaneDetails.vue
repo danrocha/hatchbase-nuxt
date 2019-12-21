@@ -32,7 +32,7 @@
               Originally posted on
               {{
                 $dateFns.isDate(new Date(card.postedOn))
-                  ? $dateFns.format(card.postedOn, 'MMMM do')
+                  ? $dateFns.format(new Date(card.postedOn), 'MMMM do')
                   : card.postedOn
               }}
               <i class="el-icon-date"></i>
