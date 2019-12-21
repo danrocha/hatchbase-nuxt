@@ -157,6 +157,6 @@ ol {
   @apply list-disc pl-8;
 }
 .html-description ol {
-  @apply list-decimal;
+  @apply list-decimal pl-8;
 }
 </style>
