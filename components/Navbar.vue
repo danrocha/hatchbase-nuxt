@@ -7,9 +7,10 @@
       </h1>
     </div>
     <div>
-      <div v-if="$auth.loggedIn" class="relative">
+      <div v-if="$auth.loggedIn" class="relative flex">
+        <el-button type="primary">Add Job</el-button>
         <button
-          class="relative z-10 block w-12 h-12 overflow-hidden border-2 rounded focus:outline-none focus:border-yellow-500"
+          class="relative z-10 block w-12 h-12 ml-4 overflow-hidden border-2 rounded focus:outline-none focus:border-yellow-500"
           @click="isOpen = !isOpen"
         >
           <img
