@@ -1,20 +1,5 @@
 <template>
-  <GmapMap
-    :center="latLng"
-    :zoom="zoom"
-    style="width: 100%; height: 100%"
-    :options="{
-      zoomControl: true,
-      mapTypeControl: false,
-      scaleControl: false,
-      streetViewControl: false,
-      rotateControl: false,
-      fullscreenControl: false,
-      styles: mapStyle
-    }"
-  >
-    <GmapMarker :position="coordinates" :clickable="false" :draggable="false" />
-  </GmapMap>
+  <div id="map" class="w-full h-full" />
 </template>
 
 <script>
@@ -34,17 +19,44 @@ export default {
   },
   data() {
     return {
-      mapStyle
+      mapStyle,
+      map: null,
+      marker: null
     }
   },
   computed: {
-    latLng() {
+    center() {
       const coordinates = { ...this.coordinates }
       if (typeof this.coordinates.lat === 'function') {
         coordinates.lat = this.coordinates.lat()
         coordinates.lng = this.coordinates.lng()
       }
       return coordinates
+    }
+  },
+  mounted() {
+    this.map = this.initMap()
+    this.marker = this.addMarker(this.center, this.map)
+  },
+  methods: {
+    initMap() {
+      const center = this.center
+      const zoom = this.zoom
+      // The map, centered at Uluru
+      const map = new this.$google.maps.Map(document.getElementById('map'), {
+        zoom,
+        center,
+        styles: this.mapStyle
+      })
+      return map
+    },
+    addMarker(position, map) {
+      // The marker, positioned at Uluru
+      const marker = new this.$google.maps.Marker({
+        position,
+        map
+      })
+      return marker
     }
   }
 }

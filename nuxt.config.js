@@ -26,8 +26,7 @@ export default {
     '@/plugins/vue-js-modal',
     '@/plugins/v-click-outside',
     '@/plugins/bus',
-    '@/plugins/element-ui',
-    '@/plugins/google-maps'
+    '@/plugins/element-ui'
   ],
   /*
    ** Nuxt.js dev-modules
