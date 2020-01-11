@@ -9,6 +9,7 @@
       :is="component"
       v-bind="props"
       class="px-4 pb-4 sm:px-8 sm:pb-8 md:px-10 md:pb-10 lg:px-12 lh:pb-10"
+      @close="$emit('close')"
     />
   </div>
 </template>
