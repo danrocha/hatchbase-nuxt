@@ -1,5 +1,5 @@
 <template>
-  <div id="map" class="w-full h-full" />
+  <div :id="mapDivId" class="w-full h-full" />
 </template>
 
 <script>
@@ -25,6 +25,9 @@ export default {
     }
   },
   computed: {
+    mapDivId() {
+      return `map-${this.center.lat}-${this.center.lng}`
+    },
     center() {
       const coordinates = { ...this.coordinates }
       if (typeof this.coordinates.lat === 'function') {
@@ -35,15 +38,15 @@ export default {
     }
   },
   mounted() {
-    this.map = this.initMap()
+    this.map = this.initMap(this.mapDivId)
     this.marker = this.addMarker(this.center, this.map)
   },
   methods: {
-    initMap() {
+    initMap(mapDivId) {
       const center = this.center
       const zoom = this.zoom
       // The map, centered at Uluru
-      const map = new this.$google.maps.Map(document.getElementById('map'), {
+      const map = new this.$google.maps.Map(document.getElementById(mapDivId), {
         zoom,
         center,
         styles: this.mapStyle
