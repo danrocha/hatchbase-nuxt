@@ -37,7 +37,6 @@ export default {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss
     '@nuxtjs/tailwindcss'
-    // Docs: https://gitlab.com/broj42/nuxt-gmaps#readme
   ],
   /*
    ** Nuxt.js modules
@@ -53,7 +52,17 @@ export default {
     // Doc: https://github.com/nuxt-community/apollo-module
     '@nuxtjs/apollo',
     // Doc: https://github.com/nuxt-community/date-fns-module
-    '@nuxtjs/date-fns'
+    '@nuxtjs/date-fns',
+    // With options
+    [
+      'nuxt-google-maps-module',
+      {
+        /* module options */
+        key:
+          process.env.NUXT_ENV_GOOGLE_MAPS_API_KEY ||
+          'AIzaSyAxKpkg3S1jYWV83IXHWyLBJ8nGNSsfZFI' // Default
+      }
+    ]
   ],
   apollo: {
     tokenName: 'auth._token.auth0',

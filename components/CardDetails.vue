@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import EditableText from '@/components/EditableText'
 import CardActions from '@/components/CardActions'
 import OfficeLogo from '@/components/OfficeLogo'
@@ -88,7 +89,18 @@ export default {
       pane: 'details'
     }
   },
+  computed: {
+    ...mapState({
+      currentCard: (state) => state.card.currentCard
+    })
+  },
+  mounted() {
+    if (!this.currentCard) {
+      this['card/setCard'](this.card)
+    }
+  },
   methods: {
+    ...mapActions(['card/setCard']),
     activatePane(pane) {
       this.pane = pane
     }

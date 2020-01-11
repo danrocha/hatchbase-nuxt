@@ -45,30 +45,24 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import MapSingleMarker from '@/components/MapSingleMarker'
 export default {
   name: 'OfficeFormStep3',
   components: {
     MapSingleMarker
   },
-  props: {
-    card: {
-      type: Object,
-      required: true
-    },
-    location: {
-      type: Object,
-      required: true
-    },
-    office: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       loading: false
     }
+  },
+  computed: {
+    ...mapState({
+      office: (state) => state.addOffice.office,
+      location: (state) => state.addOffice.location,
+      card: (state) => state.card.currentCard
+    })
   },
   methods: {
     save() {

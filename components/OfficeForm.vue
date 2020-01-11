@@ -1,35 +1,58 @@
 <template>
   <div class="mb-12">
-    <el-steps :active="step" class="mb-8" finish-status="success">
-      <el-step title="Step 1" description="Location"></el-step>
-      <el-step title="Step 2" description="Office"></el-step>
-      <el-step
-        title="Step 3"
-        description="Confirmation"
-        :status="status"
-      ></el-step>
-    </el-steps>
+    <!-- AUTOMATIC FETCH -->
+    <div v-if="card.officeName">
+      <office-form-office v-if="location" @confirm="confirmOffice" />
+      <office-form-location @confirm="confirmLocation" />
+      <!-- <div v-if="step === 0">
+        <office-form-step-1-auto
+          v-if="card.officeName"
+          @confirm="confirmLocation"
+        />
+        <office-form-step-1-manual v-else @confirm="confirmOfficeAndLocation" />
+      </div>
 
-    <div v-if="step === 0">
-      <office-form-step-1 :card="card" @confirm="confirmLocation" />
+      <div v-if="step === 1">
+        <office-form-step-2
+          :card="card"
+          :location="location"
+          @confirm="confirmOffice"
+        />
+      </div>
+      <div v-if="step === 2" v-loading="loading">
+        <office-form-step-3
+          :card="card"
+          :location="location"
+          :office="office"
+          @restart="restart"
+          @confirm="save"
+        />
+      </div> -->
+    </div>
+    <!-- MANUAL ADD -->
+    <div v-else>
+      <div v-if="step === 0">
+        <office-form-step-1-manual @confirm="confirmOfficeAndLocation" />
+      </div>
+
+      <!-- <div v-if="step === 1">
+        <office-form-step-2
+          :card="card"
+          :location="location"
+          @confirm="confirmOffice"
+        />
+      </div>
+      <div v-if="step === 2" v-loading="loading">
+        <office-form-step-3
+          :card="card"
+          :location="location"
+          :office="office"
+          @restart="restart"
+          @confirm="save"
+        />
+      </div> -->
     </div>
 
-    <div v-if="step === 1">
-      <office-form-step-2
-        :card="card"
-        :location="location"
-        @confirm="confirmOffice"
-      />
-    </div>
-    <div v-if="step === 2" v-loading="loading">
-      <office-form-step-3
-        :card="card"
-        :location="location"
-        :office="office"
-        @restart="restart"
-        @confirm="save"
-      />
-    </div>
     <div v-if="step === 3" class="h-24">
       <p class="font-bold text-center">
         Completed! Reloading the office pane...
@@ -40,43 +63,54 @@
 
 <script>
 import gql from 'graphql-tag'
-import OfficeFormStep1 from '@/components/OfficeFormStep1'
-import OfficeFormStep2 from '@/components/OfficeFormStep2'
-import OfficeFormStep3 from '@/components/OfficeFormStep3'
+import { mapActions, mapState } from 'vuex'
+import OfficeFormLocation from '@/components/OfficeFormLocation'
+import OfficeFormStep1Manual from '@/components/OfficeFormStep1Manual'
+import OfficeFormOffice from '@/components/OfficeFormOffice'
+
 export default {
   name: 'OfficeForm',
   components: {
-    OfficeFormStep3,
-    OfficeFormStep2,
-    OfficeFormStep1
-  },
-  props: {
-    card: {
-      type: Object,
-      required: true
-    }
+    OfficeFormOffice,
+    OfficeFormLocation,
+    OfficeFormStep1Manual
   },
   data() {
     return {
       loading: false,
-      location: null,
-      office: null,
       step: 0,
       status: ''
     }
   },
+  computed: {
+    ...mapState({
+      office: (state) => state.addOffice.office,
+      fetchedDetails: (state) => state.addOffice.fetchedDetails,
+      location: (state) => state.addOffice.location,
+      card: (state) => state.card.currentCard
+    })
+  },
   methods: {
+    ...mapActions([
+      'addOffice/setLocation',
+      'addOffice/setOffice',
+      'addOffice/resetAll'
+    ]),
     confirmLocation(location) {
       console.log('Location confirmed!')
-      console.dir(location)
-      this.location = location
+      this['addOffice/setLocation'](location)
       this.step += 1
     },
-    confirmOffice(office) {
+    confirmOffice() {
       console.log('Office confirmed!')
-      console.dir(office)
-      this.office = office
-      this.step += 1
+      this['addOffice/setOffice'](this.fetchedDetails)
+      this.save()
+    },
+    confirmOfficeAndLocation(details) {
+      console.log('Location and office confirmed!')
+      this['addOffice/setLocation'](details)
+      this['addOffice/setOffice'](details)
+      this.step += 2
     },
     async save() {
       this.loading = true
@@ -115,13 +149,14 @@ export default {
     },
     finalize() {
       this.step += 1
+      this['addOffice/resetAll']()
       this.$bus.$emit('card-fetch', this.card.id)
       setTimeout(() => {
         this.$emit('finished')
       }, 2000)
     },
     restart() {
-      this.location = this.office = null
+      this['addOffice/resetAll']()
       this.step = 0
     }
   }

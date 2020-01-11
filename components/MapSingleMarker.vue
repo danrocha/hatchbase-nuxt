@@ -1,6 +1,6 @@
 <template>
   <GmapMap
-    :center="coordinates"
+    :center="latLng"
     :zoom="zoom"
     style="width: 100%; height: 100%"
     :options="{
@@ -35,6 +35,16 @@ export default {
   data() {
     return {
       mapStyle
+    }
+  },
+  computed: {
+    latLng() {
+      const coordinates = { ...this.coordinates }
+      if (typeof this.coordinates.lat === 'function') {
+        coordinates.lat = this.coordinates.lat()
+        coordinates.lng = this.coordinates.lng()
+      }
+      return coordinates
     }
   }
 }

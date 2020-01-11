@@ -33,6 +33,7 @@
   </card-container>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import Badge from '@/components/Badge'
 import CardContainer from '@/components/CardContainer'
 import OfficeLogo from '@/components/OfficeLogo'
@@ -79,6 +80,14 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['card/setCard', 'card/resetCard', 'addOffice/resetAll']),
+    beforeOpen() {
+      this['card/setCard'](this.card)
+    },
+    beforeClose() {
+      this['card/resetCard']()
+      this['addOffice/resetAll']()
+    },
     openCard() {
       this.$modal.show(
         ModalContainer,
@@ -90,6 +99,10 @@ export default {
           clickToClose: true,
           height: 'auto',
           scrollable: true
+        },
+        {
+          'before-open': this.beforeOpen,
+          'before-close': this.beforeClose
         }
       )
     }
