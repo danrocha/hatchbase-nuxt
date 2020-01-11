@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 export default {
   mode: 'universal',
   head: {
@@ -57,9 +59,7 @@ export default {
       'nuxt-google-maps-module',
       {
         /* module options */
-        key:
-          process.env.NUXT_ENV_GOOGLE_MAPS_API_KEY ||
-          'AIzaSyAxKpkg3S1jYWV83IXHWyLBJ8nGNSsfZFI' // Default
+        key: process.env.NUXT_ENV_GOOGLE_MAPS_API_KEY // Default
       }
     ]
   ],
