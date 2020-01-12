@@ -48,6 +48,7 @@ export const CARD_FRAGMENT = gql`
         ...milestone
       }
     }
+    isNew
   }
   ${MILESTONE_FRAGMENT}
 `

@@ -4,6 +4,12 @@
       id="card-action"
       class="relative z-10 flex items-center justify-end h-6"
     >
+      <div
+        v-if="isNew"
+        class="px-2 mr-2 text-xs text-white bg-black rounded-full"
+      >
+        new
+      </div>
       <div>
         <card-actions>
           <template v-slot="{ deleteCard }">
@@ -40,6 +46,10 @@ export default {
     cardId: {
       type: Number,
       required: true
+    },
+    isNew: {
+      type: Boolean,
+      default: false
     }
   }
 }

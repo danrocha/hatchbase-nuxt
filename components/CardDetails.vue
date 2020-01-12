@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import { mapState, mapActions } from 'vuex'
 import EditableText from '@/components/EditableText'
 import CardActions from '@/components/CardActions'
@@ -98,11 +99,39 @@ export default {
     if (!this.currentCard) {
       this['card/setCard'](this.card)
     }
+    if (this.card.isNew) {
+      this.setIsNew(this.card.id)
+    }
   },
   methods: {
     ...mapActions(['card/setCard']),
     activatePane(pane) {
       this.pane = pane
+    },
+    async setIsNew(cardId) {
+      const input = {
+        id: cardId,
+        patch: {
+          isNew: false
+        }
+      }
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation updateCard($input: UpdateCardInput!) {
+              updateCard(input: $input) {
+                clientMutationId
+              }
+            }
+          `,
+          variables: {
+            input
+          },
+          refetchQueries: ['boards']
+        })
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 }

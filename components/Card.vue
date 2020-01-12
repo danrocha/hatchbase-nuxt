@@ -1,5 +1,5 @@
 <template>
-  <card-container :card-id="card.id">
+  <card-container :card-id="card.id" :is-new="card.isNew">
     <div @click="openCard">
       <div class="flex items-end mb-4">
         <office-logo
