@@ -2,8 +2,19 @@
   <div class="mb-12">
     <!-- AUTOMATIC FETCH -->
     <div v-if="card.officeName">
+      <div v-if="location && office">
+        <p class="mb-2">Is this correct?</p>
+        <div class="flex">
+          <el-button type="primary" :loading="loading" @click="save"
+            >Yes!</el-button
+          >
+          <button class="ml-4 text-gray-600 underline" @click="restart">
+            No, start again
+          </button>
+        </div>
+      </div>
       <office-form-office v-if="location" @confirm="confirmOffice" />
-      <office-form-location @confirm="confirmLocation" />
+      <office-form-location :key="formLocationKey" @confirm="confirmLocation" />
       <!-- <div v-if="step === 0">
         <office-form-step-1-auto
           v-if="card.officeName"
@@ -79,7 +90,8 @@ export default {
     return {
       loading: false,
       step: 0,
-      status: ''
+      status: '',
+      formLocationKey: 0
     }
   },
   computed: {
@@ -156,6 +168,7 @@ export default {
       }, 2000)
     },
     restart() {
+      this.formLocationKey += 1
       this['addOffice/resetAll']()
       this.step = 0
     }

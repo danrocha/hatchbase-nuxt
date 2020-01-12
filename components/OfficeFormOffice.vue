@@ -3,11 +3,7 @@
     <div v-if="office">
       <div class="flex p-4 my-4 border rounded">
         <!-- Pure HTML/JS example -->
-        <img
-          :src="office.logoUrl"
-          class="flex-none w-24 h-24 mr-4"
-          @error="imgUrlAlt"
-        />
+        <img :src="office.logoUrl" class="flex-none w-24 h-24 mr-4" />
         <div>
           <div class="mb-8">
             <p class="font-bold">{{ office.name }}</p>
@@ -93,7 +89,7 @@ export default {
     })
   },
   async mounted() {
-    if (this.location.place_id) {
+    if (this.location.place_id && !this.office) {
       await this['addOffice/fetchPlaceDetails'](this.location.place_id)
     }
   },
@@ -101,10 +97,6 @@ export default {
     ...mapActions(['addOffice/fetchPlaceDetails']),
     save() {
       this.$emit('confirm')
-    },
-    imgUrlAlt(event) {
-      this.details.logoUrl = this.randomLogo
-      event.target.src = this.randomLogo
     }
   }
 }

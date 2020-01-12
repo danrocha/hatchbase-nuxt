@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p v-if="!person">We are setting everything up....</p>
+    <p v-if="!person">Logging you in....</p>
     <ul v-if="progressMessages.length">
       <li v-for="(msg, index) in progressMessages" :key="index">{{ msg }}</li>
     </ul>
@@ -23,7 +23,14 @@ export default {
       await this.userSetup()
       this.progressMessages.push(`... Done... redirecting...`)
     }
-    this.$router.push('/')
+    const redirect = this.$auth.$storage.getCookie('redirect')
+    // console.log(redirect)
+    if (redirect) {
+      this.$auth.$storage.setCookie('redirect', null, false)
+      this.$router.push(redirect)
+    } else {
+      this.$router.push('/')
+    }
   },
   methods: {
     async userSetup() {

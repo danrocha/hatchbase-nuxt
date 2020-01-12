@@ -85,6 +85,11 @@ export default {
       callback: '/callback',
       home: false
     },
+    rewriteRedirects: true,
+    localStorage: {
+      prefix: 'auth.'
+    },
+    fullPathRedirect: true,
     strategies: {
       auth0: {
         domain: 'hatchbase.eu.auth0.com',

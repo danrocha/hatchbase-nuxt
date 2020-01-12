@@ -25,6 +25,9 @@ export const CARD_FRAGMENT = gql`
       id
       lat
       lng
+      city {
+        name
+      }
       formattedAddress
       internationalPhoneNumber
     }

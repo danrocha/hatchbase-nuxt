@@ -87,7 +87,7 @@ export default {
     async updateListCards(listId, cards) {
       const input = {
         listId,
-        cards
+        cards: [...cards].reverse()
       }
       try {
         await this.$apollo.mutate({

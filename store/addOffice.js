@@ -5,6 +5,7 @@ export const state = () => ({
   office: null,
   fetchedLocations: [],
   fetchedDetails: null,
+  city: null,
   loading: false
 })
 
@@ -21,11 +22,16 @@ export const mutations = {
   SET_OFFICE(state, office) {
     state.office = office
   },
+  SET_CITY(state, city) {
+    state.city = city
+  },
   RESET_ALL(state) {
     state.office = null
     state.location = null
     state.loading = false
     state.fetchedLocations = []
+    state.fetchedDetails = null
+    state.city = null
   },
   SET_LOADING(state, loading) {
     state.loading = loading
@@ -36,6 +42,13 @@ export const actions = {
     const finalLocation = { ...location, ...getAddressObject(location) }
     return commit('SET_LOCATION', finalLocation)
   },
+  setCity({ commit }, placeDetails) {
+    const city = getAddressObject(placeDetails)
+    return commit('SET_CITY', {
+      ...city,
+      geometry: placeDetails.geometry
+    })
+  },
   setFetchedLocations({ commit }, locations) {
     return commit('SET_FETCHED_LOCATIONS', locations)
   },
@@ -45,8 +58,12 @@ export const actions = {
       officeDetails(details, rootState.card.currentCard)
     )
   },
-  setOffice({ commit }, office) {
-    return commit('SET_OFFICE', office)
+  setOffice({ commit, state, rootState }, office) {
+    let details = office
+    if (!state.fetchedDetails) {
+      details = officeDetails(office, rootState.card.currentCard)
+    }
+    return commit('SET_OFFICE', details)
   },
   resetAll({ commit }) {
     return commit('RESET_ALL')
@@ -78,6 +95,26 @@ export const actions = {
       const results = await this.$axios.$get(url)
       if (results.status === 'OK') {
         dispatch('setFetchedLocations', results.results)
+      } else {
+        throw new Error('Could not get any addresses:', results.status)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      commit('SET_LOADING', false)
+    }
+  },
+  async searchPlaces({ commit, dispatch, rootState }) {
+    commit('SET_LOADING', true)
+    const card = rootState.card.currentCard
+    let url = `http://localhost:4000/search-places?query=${card.officeName}`
+    if (card.city) url += ` ${card.city}`
+    if (card.country) url += ` ${card.country}`
+
+    try {
+      const results = await this.$axios.$get(url)
+      if (results.status === 'OK') {
+        dispatch('setFetchedLocations', results.candidates)
       } else {
         throw new Error('Could not get any addresses:', results.status)
       }

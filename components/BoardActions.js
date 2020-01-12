@@ -27,7 +27,7 @@ export default {
                   id
                   name
                   order
-                  cards(orderBy: ORDER_ASC) {
+                  cards(orderBy: ORDER_DESC) {
                     totalCount
                     nodes {
                       ...card
