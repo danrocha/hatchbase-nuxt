@@ -55,7 +55,7 @@
                   @click="saveLocation(location)"
                   >Yes!</el-button
                 >
-                <button class="text-blue-500 underline">
+                <button class="text-blue-500 underline" @click="manual = true">
                   No, add manually
                 </button>
               </div>

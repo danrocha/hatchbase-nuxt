@@ -21,46 +21,54 @@
       </div>
     </div>
     <div v-else>
-      <div
-        v-if="loading"
-        v-loading="loading"
-        element-loading-text="Fetching details about the office on Google Places..."
-        class="w-full h-48"
-      ></div>
-      <div v-else-if="fetchedDetails">
-        <p class="font-bold">
-          Now let's add some extra details about the company.
-        </p>
-        <p>Here's what we've found:</p>
+      <div v-if="manual" class="p-4 my-4 border rounded">
+        <form-office-details />
+      </div>
+      <div v-else>
+        <div
+          v-if="loading"
+          v-loading="loading"
+          element-loading-text="Fetching details about the office on Google Places..."
+          class="w-full h-48"
+        ></div>
+        <div v-else-if="fetchedDetails">
+          <p class="font-bold">
+            Now let's add some extra details about the company.
+          </p>
+          <p>Here's what we've found:</p>
 
-        <div class="flex p-4 my-4 border rounded">
-          <!-- Pure HTML/JS example -->
-          <img
-            :src="fetchedDetails.logoUrl"
-            class="flex-none w-24 h-24 mr-4"
-            @error="imgUrlAlt"
-          />
-          <div>
-            <div class="mb-8">
-              <p class="font-bold">{{ fetchedDetails.name }}</p>
-              <p>
-                <a
-                  :href="fetchedDetails.website"
-                  target="_blank"
-                  class="text-blue-500 underline"
-                  >{{ fetchedDetails.domain }}</a
+          <div class="flex p-4 my-4 border rounded">
+            <!-- Pure HTML/JS example -->
+            <img
+              :src="fetchedDetails.logoUrl"
+              class="flex-none w-24 h-24 mr-4"
+              @error="imgUrlAlt"
+            />
+            <div>
+              <div class="mb-8">
+                <p class="font-bold">{{ fetchedDetails.name }}</p>
+                <p>
+                  <a
+                    :href="fetchedDetails.website"
+                    target="_blank"
+                    class="text-blue-500 underline"
+                    >{{ fetchedDetails.domain }}</a
+                  >
+                </p>
+                <p>{{ fetchedDetails.international_phone_number }}</p>
+              </div>
+              <p class="mb-2">Is this correct?</p>
+              <div class="flex">
+                <el-button type="primary" :loading="loading" @click="save"
+                  >Yes!</el-button
                 >
-              </p>
-              <p>{{ fetchedDetails.international_phone_number }}</p>
-            </div>
-            <p class="mb-2">Is this correct?</p>
-            <div class="flex">
-              <el-button type="primary" :loading="loading" @click="save"
-                >Yes!</el-button
-              >
-              <button class="ml-4 text-gray-600 underline">
-                No, add manually
-              </button>
+                <button
+                  class="ml-4 text-gray-600 underline"
+                  @click="manual = true"
+                >
+                  No, add manually
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -71,12 +79,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import FormOfficeDetails from '@/components/FormOfficeDetails'
 
 export default {
   name: 'OfficeFormOffice',
+  components: {
+    FormOfficeDetails
+  },
   data() {
     return {
-      logoUrl: ''
+      logoUrl: '',
+      manual: false
     }
   },
   computed: {
@@ -97,6 +110,10 @@ export default {
     ...mapActions(['addOffice/fetchPlaceDetails']),
     save() {
       this.$emit('confirm')
+    },
+    imgUrlAlt(event) {
+      this.details.logoUrl = this.randomLogo
+      event.target.src = this.randomLogo
     }
   }
 }
