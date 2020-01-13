@@ -9,6 +9,7 @@
 <script>
 import gql from 'graphql-tag'
 export default {
+  layout: 'simple',
   data() {
     return {
       person: null,

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center justify-center w-full h-full">
-    <div v-if="$auth.loggedIn" class="w-1/2 text-center">
+  <div class="w-full h-full">
+    <div v-if="$auth.loggedIn">
       <div class="p-12 overflow-hidden border border-black rounded-lg">
         <p class="mb-1 text-lg font-bold leading-tight">
           {{ $route.query.title }}
@@ -9,7 +9,17 @@
       </div>
     </div>
     <div v-else>
-      Logging you in...
+      <p class="mb-4">
+        You need to login for this to work.
+      </p>
+      <p class="mb-8">
+        <el-button type="primary" @click="login">Login</el-button>
+      </p>
+      <p class="text-sm">
+        Don't have an account?
+        <button class="text-blue-500 underline" @click="login">Register</button
+        >.
+      </p>
     </div>
   </div>
 </template>
@@ -17,6 +27,7 @@
 <script>
 import gql from 'graphql-tag'
 export default {
+  layout: 'simple',
   auth: false,
   data() {
     return {
@@ -31,8 +42,11 @@ export default {
       return this.$router.push('/')
     }
     if (!this.$auth.loggedIn) {
-      this.$auth.$storage.setCookie('redirect', this.$route.fullPath, false)
-      return this.$auth.loginWith('auth0')
+      return this.$auth.$storage.setCookie(
+        'redirect',
+        this.$route.fullPath,
+        false
+      )
     }
 
     const cardId = await this.addCard(this.url)
@@ -43,6 +57,9 @@ export default {
     }
   },
   methods: {
+    login() {
+      return this.$auth.loginWith('auth0')
+    },
     startLoader() {
       this.loading = this.$loading({
         lock: true,
