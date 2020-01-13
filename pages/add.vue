@@ -71,8 +71,14 @@ export default {
       this.startLoader()
       console.log('Adding new card...')
       console.log('Fecthing more details from URL...')
-      const details = await this.fetchJobDetails(url)
-      console.log('...done!')
+      let details
+      try {
+        details = await this.fetchJobDetails(url)
+        console.log('...done!')
+      } catch (e) {
+        console.error(e)
+        details = { title: this.title, url: this.url }
+      }
 
       try {
         const { data } = await this.$apollo.mutate({

@@ -60,7 +60,7 @@ export const actions = {
   },
   setOffice({ commit, state, rootState }, office) {
     let details = office
-    if (!state.fetchedDetails) {
+    if (!details.logoUrl) {
       details = officeDetails(office, rootState.card.currentCard)
     }
     return commit('SET_OFFICE', details)
