@@ -89,17 +89,18 @@
             />
           </el-form-item>
         </div>
-        <el-form-item class="flex mb-8"> </el-form-item>
-        <el-button
-          :loading="loading"
-          type="primary"
-          class="mr-4"
-          @click="submitForm('formManual')"
-          >Add</el-button
-        >
-        <el-button type="text" @click="$emit('close')">
-          Cancel
-        </el-button>
+        <el-form-item class="flex mb-8">
+          <el-button
+            :loading="loading"
+            type="primary"
+            class="mr-4"
+            @click="submitForm('formManual')"
+            >Add</el-button
+          >
+          <el-button type="text" @click="$emit('close')">
+            Cancel
+          </el-button>
+        </el-form-item>
       </el-form>
       Or
       <button class="text-blue-500 underline" @click="manual = false">
