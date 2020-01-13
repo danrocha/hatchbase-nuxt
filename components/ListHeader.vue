@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex justify-between">
+  <div class="relative flex justify-between h-8 px-2 bg-white shadow-md">
     <button
       v-if="editingName"
       tabindex="-1"

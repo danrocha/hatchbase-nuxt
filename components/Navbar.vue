@@ -1,48 +1,44 @@
 <template>
   <nav class="flex items-center justify-between">
-    <div class="flex items-center">
+    <div class="flex items-center bg-white shadow-md">
       <logo class="w-12 h-12 mr-2 text-yellow-500 fill-current" />
-      <h1 class="text-lg font-bold text-black">hatchbase</h1>
+      <h1 class="mr-4 text-lg font-bold text-black">hatchbase</h1>
     </div>
     <div>
-      <div v-if="$auth.loggedIn" class="relative flex">
-        <el-button type="primary">Add Job</el-button>
+      <div v-if="$auth.loggedIn" class="relative flex items-center">
         <button
-          class="relative z-10 block w-12 h-12 ml-4 overflow-hidden border-2 rounded focus:outline-none focus:border-yellow-500"
-          @click="isOpen = !isOpen"
+          class="p-2 mr-4 text-sm font-semibold tracking-wide text-white uppercase bg-black shadow-md"
         >
-          <img
-            :src="
-              $auth.user.picture ||
-                `https://api.adorable.io/avatars/50/${$auth.user.name}.png`
-            "
-            class="object-cover w-full h-full"
-          />
+          Add Job
         </button>
-        <button
-          v-if="isOpen"
-          tabindex="-1"
-          class="fixed inset-0 w-full h-full cursor-default"
-          @click="isOpen = false"
-        ></button>
-        <div
-          v-if="isOpen"
-          class="absolute right-0 w-48 py-2 mt-2 bg-white border border-gray-100 rounded shadow-lg"
-        >
-          <p class="px-4 py-2">{{ $auth.user.name }}</p>
-          <p class="px-4 py-2 hover:bg-yellow-500">
-            <button @click="logout">Log out</button>
-          </p>
-        </div>
+
+        <el-dropdown trigger="click" @command="logout">
+          <span>
+            <img
+              :src="
+                $auth.user.picture ||
+                  `https://api.adorable.io/avatars/50/${$auth.user.name}.png`
+              "
+              class="object-cover w-12 h-12 border-2 border-white shadow-md"
+            />
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item icon="el-icon-person" :disabled="true">{{
+              $auth.user.name
+            }}</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-exit" command="logout"
+              >Log out</el-dropdown-item
+            >
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
-      <el-button v-else type="primary" @click="login">Login</el-button>
-      <!-- <button
+      <button
         v-else
-        class="p-2 text-sm font-bold tracking-wide uppercase border rounded shadow"
+        class="p-2 text-sm font-semibold tracking-wide text-white uppercase bg-black shadow-md"
         @click="login"
       >
         Login
-      </button> -->
+      </button>
     </div>
   </nav>
 </template>

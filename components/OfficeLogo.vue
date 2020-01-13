@@ -1,9 +1,5 @@
 <template>
-  <img
-    :src="logoSrc"
-    loading="lazy"
-    class="overflow-hidden border border-gray-200 rounded"
-  />
+  <img :src="logoSrc" loading="lazy" class="overflow-hidden" />
 </template>
 
 <script>

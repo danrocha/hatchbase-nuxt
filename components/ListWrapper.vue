@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-full px-3 py-3 mr-4 bg-gray-200 column-width">
+  <div class="min-h-full mr-4 column-width">
     <slot />
   </div>
 </template>
@@ -12,7 +12,7 @@ export default {
 
 <style scoped>
 .column-width {
-  min-width: 280px;
-  width: 280px;
+  min-width: 320px;
+  width: 320px;
 }
 </style>
