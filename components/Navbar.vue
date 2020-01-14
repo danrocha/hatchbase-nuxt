@@ -1,15 +1,27 @@
 <template>
-  <nav class="flex items-center justify-between">
-    <div class="flex items-center bg-white shadow-md">
+  <nav class="flex justify-between">
+    <button
+      class="flex items-center bg-white shadow-md focus:outline-none"
+      @click="$router.push('/')"
+    >
       <logo class="w-12 h-12 mr-2 text-yellow-500 fill-current" />
       <h1 class="mr-4 text-lg font-bold text-black">hatchbase</h1>
-    </div>
-    <div>
+    </button>
+    <div class="flex items-center bg-white shadow-md">
       <div v-if="$auth.loggedIn" class="relative flex items-center">
-        <button
-          class="p-2 mr-4 text-sm font-semibold tracking-wide text-white uppercase bg-black shadow-md"
+        <nuxt-link
+          v-if="$route.name === 'index'"
+          to="/home"
+          class="px-4 text-sm font-semibold text-black hover:underline"
+          @click="$router.push('/home')"
         >
-          Add Job
+          dashboard
+        </nuxt-link>
+        <button
+          v-else
+          class="px-4 text-sm font-semibold text-black hover:underline"
+        >
+          add job
         </button>
 
         <el-dropdown trigger="click" @command="logout">
@@ -32,13 +44,14 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <button
-        v-else
-        class="p-2 text-sm font-semibold tracking-wide text-white uppercase bg-black shadow-md"
-        @click="login"
-      >
-        Login
-      </button>
+      <div v-else>
+        <button
+          class="px-4 text-sm font-semibold text-black hover:underline"
+          @click="login"
+        >
+          login/sign up
+        </button>
+      </div>
     </div>
   </nav>
 </template>

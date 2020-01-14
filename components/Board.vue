@@ -1,46 +1,67 @@
 <template>
   <div class="flex justify-center">
-    <!-- <div class="flex h-full py-12 overflow-x-scroll"> -->
-    <draggable
-      v-model="board.lists.nodes"
-      :animation="200"
-      draggable=".list"
-      ghost-class=".ghost-list"
-      filter=".card"
-      class="flex pb-12 overflow-x-scroll"
-      @change="moveList"
-    >
-      <list-wrapper
-        v-for="list in board.lists.nodes"
-        :key="list.id"
-        class="cursor-pointer list"
-      >
-        <list-header :list="list" />
-        <card-footer v-if="list.name === 'Inbox'" :list="list" />
+    <div class="flex pb-12 overflow-x-scroll">
+      <!-- INBOX, does not move -->
+      <list-wrapper slot="footer" class="mr-12">
+        <list-header :list="listInbox" />
+        <card-footer :list="listInbox" />
         <draggable
-          v-model="list.cards.nodes"
+          v-model="listInbox.cards.nodes"
           :animation="200"
           draggable=".card"
           ghost-class="ghost-card"
           group="cards"
-          @change="change($event, list)"
+          @change="change($event, listInbox)"
         >
           <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
           <card
-            v-for="card in list.cards.nodes"
+            v-for="card in listInbox.cards.nodes"
             :key="card.id"
             :card="card"
             class="mt-3 card"
           />
         </draggable>
-        <!-- <cards :cards="list.cards.nodes" /> -->
       </list-wrapper>
-
-      <list-wrapper class="self-start">
-        <lists-footer :board="board" />
-      </list-wrapper>
-    </draggable>
-    <!-- </div> -->
+      <draggable
+        v-model="listsDraggable"
+        :animation="200"
+        draggable=".list"
+        ghost-class="ghost-list"
+        filter=".card"
+        class="flex"
+        @change="moveList"
+      >
+        <!-- ALL OTHER LISTS -->
+        <list-wrapper
+          v-for="list in listsDraggable"
+          :key="list.id"
+          class="mr-4 cursor-pointer"
+        >
+          <list-header :list="list" />
+          <draggable
+            v-model="list.cards.nodes"
+            :animation="200"
+            draggable=".card"
+            ghost-class="ghost-card"
+            group="cards"
+            @change="change($event, list)"
+          >
+            <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
+            <card
+              v-for="card in list.cards.nodes"
+              :key="card.id"
+              :card="card"
+              class="mt-3 card"
+            />
+          </draggable>
+          <!-- <cards :cards="list.cards.nodes" /> -->
+        </list-wrapper>
+        <!-- ADD NEW LIST BUTTON -->
+        <list-wrapper slot="footer" class="self-start">
+          <lists-footer :board="board" />
+        </list-wrapper>
+      </draggable>
+    </div>
   </div>
 </template>
 
@@ -72,8 +93,12 @@ export default {
   },
   data() {
     return {
+      lastMovedCardId: null,
       lists: this.board.lists.nodes,
-      lastMovedCardId: null
+      listsDraggable: this.board.lists.nodes.filter(
+        (node) => node.name !== 'Inbox'
+      ),
+      listInbox: this.board.lists.nodes.find((node) => node.name === 'Inbox')
     }
   },
   methods: {
@@ -104,21 +129,22 @@ export default {
           `,
           variables: {
             input
-          },
-          refetchQueries: ['boards']
+          }
         })
       } catch (error) {
         console.error(error)
       }
     },
+    // eslint-disable-next-line require-await
     async moveList(e) {
+      console.log(e)
       if (e.moved) {
         await this.updateListOrder()
       }
     },
     async updateListOrder() {
       const input = {
-        lists: this.board.lists.nodes
+        lists: this.listsDraggable
       }
       try {
         await this.$apollo.mutate({
@@ -131,7 +157,8 @@ export default {
           `,
           variables: {
             input
-          }
+          },
+          refetchQueries: ['boards']
         })
       } catch (error) {
         console.error(error)
@@ -148,9 +175,9 @@ export default {
 
 <style scoped>
 .ghost-card {
-  @apply border opacity-50 border-blue-500 bg-gray-200;
+  @apply border opacity-50 border-black bg-white;
 }
 .ghost-list {
-  @apply border opacity-50 border-blue-500 bg-white;
+  @apply border opacity-50 border-black bg-white;
 }
 </style>

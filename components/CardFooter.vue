@@ -2,7 +2,7 @@
   <button
     slot="footer"
     role="group"
-    class="flex items-center justify-center w-full p-1 mt-3 bg-white border border-white rounded opacity-50 hover:opacity-100"
+    class="flex items-center justify-center w-full p-1 mt-3 bg-white border border-white shadow-md hover:border-black"
     @click="addNewCard"
   >
     <i class="el-icon-plus"></i>

@@ -29,7 +29,7 @@
     </div>
     <button
       v-else
-      class="text-sm font-semibold tracking-wide text-black cursor-text"
+      class="text-sm font-semibold tracking-wide cursor-text"
       @click="editingName = true"
     >
       {{ name }}
@@ -76,6 +76,9 @@ export default {
     numCards() {
       return this.list.cards.totalCount
     }
+    // isInbox() {
+    //   return this.list.name === 'Inbox'
+    // }
   }
 }
 </script>

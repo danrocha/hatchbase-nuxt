@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-full mr-4 column-width">
+  <div class="min-h-full column-width">
     <slot />
   </div>
 </template>
