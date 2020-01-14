@@ -83,12 +83,15 @@ export default {
   auth: {
     redirect: {
       callback: '/callback',
-      home: false
+      login: '/',
+      logout: '/',
+      home: '/home'
     },
     rewriteRedirects: true,
     localStorage: {
       prefix: 'auth.'
     },
+    resetOnError: true,
     fullPathRedirect: true,
     strategies: {
       auth0: {
