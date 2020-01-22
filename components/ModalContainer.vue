@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="flex items-center justify-end h-12 px-2">
+  <div class="flex flex-col pb-4 pl-4 pr-4">
+    <div class="flex items-center justify-end h-12">
       <button-close @click="$emit('close')" />
     </div>
 
@@ -8,7 +8,7 @@
     <component
       :is="component"
       v-bind="props"
-      class="px-4 pb-4 sm:px-8 sm:pb-8 md:px-10 md:pb-10 lg:px-12 lh:pb-10"
+      class="p-4 md:p-6 lg:p-8"
       @close="$emit('close')"
     />
   </div>

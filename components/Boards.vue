@@ -2,9 +2,9 @@
   <board-actions :query="true">
     <template v-slot="{ loading, data }">
       <p v-if="loading">Loading...</p>
-      <div v-else>
+      <template v-else>
         <board v-for="board in data.nodes" :key="board.id" :board="board" />
-      </div>
+      </template>
     </template>
   </board-actions>
 </template>

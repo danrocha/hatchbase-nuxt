@@ -1,5 +1,5 @@
 <template>
-  <div slot="footer" class="bg-white shadow-md">
+  <footer slot="footer" class="bg-white rounded-sm shadow-md">
     <list-actions v-if="adding" @success-add="reset">
       <template v-slot="{ loading, addList }">
         <form class="p-4" @submit.prevent="addList(name, boardId, nextOrder)">
@@ -30,12 +30,12 @@
     </list-actions>
     <button
       v-else
-      class="flex items-center justify-center w-full p-1 text-sm border border-white hover:border-black"
+      class="flex items-center justify-center w-full p-1 text-sm border border-white rounded-sm hover:border-black"
       @click="adding = true"
     >
       <i class="mr-2 el-icon-plus"></i> new column
     </button>
-  </div>
+  </footer>
 </template>
 
 <script>

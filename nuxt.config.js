@@ -28,7 +28,9 @@ export default {
     '@/plugins/vue-js-modal',
     '@/plugins/v-click-outside',
     '@/plugins/bus',
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/composition-api',
+    '@/plugins/vue-draggable'
   ],
   /*
    ** Nuxt.js dev-modules

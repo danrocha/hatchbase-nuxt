@@ -1,9 +1,9 @@
 <template>
-  <div class="p-2 bg-white shadow-md">
-    <slot />
+  <div class="bg-white border rounded shadow">
+    <div class="px-4 pt-4" @click="showCard(card)"><slot /></div>
     <div
       id="card-action"
-      class="relative z-10 flex items-center justify-between h-8"
+      class="relative z-10 flex items-center justify-between px-4 py-2 border-t"
     >
       <div class="flex items-center">
         <div class="mr-2">
@@ -20,6 +20,21 @@
           class="px-2 mr-2 text-xs font-semibold text-yellow-100 bg-yellow-500 rounded-full"
         >
           new
+        </div>
+        <div v-else>
+          <p class="flex items-center text-sm text-gray-600 ">
+            <alert-triangle-icon
+              v-if="isOld"
+              size="1x"
+              class="mr-1 text-gray-600"
+            ></alert-triangle-icon>
+            <clock-icon
+              v-else
+              size="1x"
+              class="mr-1 text-gray-600"
+            ></clock-icon>
+            {{ formattedDate }}
+          </p>
         </div>
       </div>
       <div class="flex items-center">
@@ -47,7 +62,10 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import {
+  ClockIcon,
+  AlertTriangleIcon,
   ChevronDownIcon,
   HeartIcon,
   CoffeeIcon,
@@ -62,7 +80,9 @@ export default {
     ChevronDownIcon,
     HeartIcon,
     CoffeeIcon,
-    FileTextIcon
+    FileTextIcon,
+    ClockIcon,
+    AlertTriangleIcon
   },
 
   props: {
@@ -70,8 +90,42 @@ export default {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {
+      createdAt: new Date(this.card.createdAt),
+      updatedAt: new Date(this.card.updatedAt)
+    }
+  },
+  computed: {
+    formattedDate() {
+      const createdAt = this.createdAt
+      if (this.$dateFns.isThisWeek(createdAt)) {
+        return this.$dateFns.formatDistanceToNow(
+          new Date(this.card.createdAt),
+          {
+            addSuffix: true
+          }
+        )
+      }
+      return this.$dateFns.format(createdAt, 'LLL do')
+    },
+    isOld() {
+      return (
+        this.$dateFns.differenceInCalendarWeeks(new Date(), this.createdAt) >= 3
+      )
+    }
+  },
+  methods: {
+    ...mapActions(['card/cardTransition']),
+    showCard(card) {
+      this['card/cardTransition']({
+        type: 'FETCH_CARD',
+        params: { id: card.id }
+      })
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss"></style>

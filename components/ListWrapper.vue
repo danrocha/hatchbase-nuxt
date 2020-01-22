@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-full column-width">
+  <div class="list">
     <slot />
   </div>
 </template>
@@ -10,9 +10,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.column-width {
-  min-width: 320px;
-  width: 320px;
-}
-</style>
+<style lang="scss"></style>

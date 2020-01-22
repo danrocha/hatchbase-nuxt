@@ -16,9 +16,9 @@
           <mailchimp />
         </div>
       </div>
-      <div class="flex justify-end">
+      <!-- <div class="flex justify-end">
         <img src="~/assets/images/success01.png" class="w-full image-1" />
-      </div>
+      </div> -->
     </section>
     <section
       id="quote"

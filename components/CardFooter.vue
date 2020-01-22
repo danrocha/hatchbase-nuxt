@@ -2,7 +2,7 @@
   <button
     slot="footer"
     role="group"
-    class="flex items-center justify-center w-full p-1 mt-3 bg-white border border-white shadow-md hover:border-black"
+    class="flex items-center justify-center w-full p-1 bg-white border border-white rounded-sm shadow hover:border-black"
     @click="addNewCard"
   >
     <i class="el-icon-plus"></i>
@@ -47,7 +47,7 @@ export default {
         {
           name: 'modal-container',
           adaptive: true,
-          maxWidth: 800,
+          maxWidth: 500,
           clickToClose: true,
           height: 'auto',
           scrollable: true

@@ -61,10 +61,10 @@
           </button>
         </div>
 
-        <div class="flex" v-if="showSave">
+        <div v-if="showSave" class="flex">
           <button
             class="mr-4 text-sm text-gray-600 underline"
-            @click="$emit('cancel')"
+            @click.stop="$emit('cancel')"
           >
             Cancel
           </button>
@@ -72,7 +72,7 @@
             type="primary"
             :loading="loading"
             size="small"
-            @click="$emit('save')"
+            @click.stop="$emit('save')"
             >Save</el-button
           >
         </div>

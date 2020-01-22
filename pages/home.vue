@@ -1,14 +1,13 @@
 <template>
-  <boards class="h-full" />
+  <div class="relative h-full shadow-inner">
+    <nuxt-child />
+  </div>
 </template>
 
 <script>
-import Boards from '@/components/Boards'
 export default {
-  components: {
-    Boards
-  }
+  layout: 'app'
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>
