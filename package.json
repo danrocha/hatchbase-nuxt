@@ -22,7 +22,7 @@
     "date-fns": "^2.8.1",
     "element-ui": "^2.13.0",
     "epic-spinners": "^1.1.0",
-    "nuxt": "^2.11.0",
+    "nuxt": "^3.4.3",
     "nuxt-google-maps-module": "^1.6.0",
     "tiptap": "^1.26.6",
     "tiptap-extensions": "^1.28.6",
